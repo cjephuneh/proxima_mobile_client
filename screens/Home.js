@@ -75,9 +75,9 @@ const Home = ({navigation}) => {
             <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>Sorry, this company does not exist in our database.</Text>
         }
 
-<TouchableOpacity className='mt-4 bg-blue-300 px-4 py-2' onPress={() => navigation.navigate('company')}>
+    <TouchableOpacity className='mt-4 bg-blue-300 px-4 py-2' onPress={() => navigation.navigate('company')}>
         <Text>Companies</Text>
-      </TouchableOpacity>
+    </TouchableOpacity>
       </ScrollView>
 
       
