@@ -1,1 +1,1 @@
-# proxima-mobile-client
+# proxima-rn-app
