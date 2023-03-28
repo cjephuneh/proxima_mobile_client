@@ -124,12 +124,11 @@ const Home = ({navigation}) => {
             <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>Sorry, this company does not exist in our database.</Text>
         }
 
-    {/* <TouchableOpacity className='mt-4 bg-blue-300 px-4 py-2' onPress={() => navigation.navigate('company')}>
-        <Text>Companies</Text>
-    </TouchableOpacity> */}
       </ScrollView>
 
-      
+      <TouchableOpacity className='mb-2 mt-3 rounded-full bg-[#2DABB1] px-4 py-3' onPress={() => navigation.navigate('issue')}>
+        <Text className='text-center font-semibold text-white'>Add an Instant Issue</Text>
+    </TouchableOpacity>
     </SafeAreaView>
   )
 }
