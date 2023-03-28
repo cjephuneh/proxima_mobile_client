@@ -126,7 +126,7 @@ const Home = ({navigation}) => {
 
       </ScrollView>
 
-      <TouchableOpacity className='mb-2 mt-3 rounded-full bg-[#2DABB1] px-4 py-3' onPress={() => navigation.navigate('issue')}>
+      <TouchableOpacity activeOpacity={0.9} className='mb-2 mt-3 rounded-full bg-[#2DABB1] px-4 py-3' onPress={() => navigation.navigate('createIssue')}>
         <Text className='text-center font-semibold text-white'>Add an Instant Issue</Text>
     </TouchableOpacity>
     </SafeAreaView>

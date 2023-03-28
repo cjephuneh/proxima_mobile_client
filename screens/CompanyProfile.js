@@ -1,8 +1,8 @@
-import { View, Text, SafeAreaView, Image } from 'react-native'
+import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-const CompanyProfile = () => {
+const CompanyProfile = ({navigation}) => {
   return (
     <SafeAreaView>
       <View className='relative'>
@@ -29,15 +29,42 @@ const CompanyProfile = () => {
                 <Text>4.65</Text>
               </View>
             </View>
-            <View className=''>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('issues')} className=''>
               <Text className='font-semibold'>Issues Resolved</Text>
               <Text className='text-center'>56/100</Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <View>
             <Text className='font-semibold'>Percentage Resolved</Text>
             <Text className='text-center'>56%</Text>
+          </View>
+        </View>
+
+        <View className='border border-gray-300 my-4' />
+
+        <View className=' space-y-3'>
+          <View className='flex-row justify-between'>
+            <Text>Support Email</Text>
+            <Text>maziwa@domain.com</Text>
+          </View>
+          <View className='flex-row justify-between'>
+            <Text>Location</Text>
+            <Text>Nairobi</Text>
+          </View>
+        </View>
+
+        <View className='border border-gray-300 my-4' />
+
+        <View>
+          <Text className='bg-gray-200 px-4 py-2'>LANGUAGE PREFERENCES</Text>
+
+          <View className='flex-row mt-2 items-center justify-between'>
+            <View>
+              <Text className='font-semibold'>Language</Text>
+              <Text className='text-sm text-gray-500'>English</Text>
+            </View>
+            <MaterialIcons name="navigate-next" size={24} color="black" />
           </View>
         </View>
       </View>
