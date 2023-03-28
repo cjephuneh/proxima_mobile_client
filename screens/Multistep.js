@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Touchable } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Touchable, KeyboardAvoidingView } from 'react-native'
 import React, { useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -11,7 +11,7 @@ const Goal = () => {
     return (
         <SafeAreaView className='flex-1 pt-12 px-2 bg-white'>
             <View className='w-full h-2 bg-gray-300 rounded'>
-                <View className='w-1/5 h-2 bg-[#2DABB1] rounded'></View>
+                <View className='w-1/6 h-2 bg-[#2DABB1] rounded'></View>
             </View>
 
             <Text className='mt-3 text-2xl font-bold tracking-wider'>Tell us your goal</Text>
@@ -52,7 +52,7 @@ const Email = () => {
             <Ionicons name="chevron-back" size={24} color="black" />
             </TouchableOpacity>
             <View className='w-full h-2 bg-gray-300 rounded'>
-                <View className='w-2/5 h-2 bg-[#2DABB1] rounded'></View>
+                <View className='w-2/6 h-2 bg-[#2DABB1] rounded'></View>
             </View>
 
             <Text className='mt-3 text-xl font-bold'>What is your email address?</Text>
@@ -78,7 +78,7 @@ const Code = () => {
             <Ionicons name="chevron-back" size={24} color="black" />
             </TouchableOpacity>
             <View className='w-full h-2 bg-gray-300 rounded'>
-                <View className='w-3/5 h-2 bg-[#2DABB1] rounded'></View>
+                <View className='w-3/6 h-2 bg-[#2DABB1] rounded'></View>
             </View>
 
             <Text className='mt-3 text-xl font-bold'>Enter authentication code</Text>
@@ -112,7 +112,7 @@ const SetPassword = () => {
             <Ionicons name="chevron-back" size={24} color="black" />
             </TouchableOpacity>
             <View className='w-full h-2 bg-gray-300 rounded'>
-                <View className='w-4/5 h-2 bg-[#2DABB1] rounded'></View>
+                <View className='w-4/6 h-2 bg-[#2DABB1] rounded'></View>
             </View>
 
             <Text className='mt-3 text-xl font-bold'>Set a password</Text>
@@ -137,7 +137,7 @@ const ConfirmPassword = () => {
             <Ionicons name="chevron-back" size={24} color="black" />
             </TouchableOpacity>
             <View className='w-full h-2 bg-gray-300 rounded'>
-                <View className='w-5/5 h-2 bg-[#2DABB1] rounded'></View>
+                <View className='w-5/6 h-2 bg-[#2DABB1] rounded'></View>
             </View>
 
             <Text className='mt-3 text-xl font-bold'>Confirm password</Text>
@@ -146,6 +146,46 @@ const ConfirmPassword = () => {
                 className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
                 placeholder='confirm password'
              />
+            <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('setProfile')} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
+                <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
+            </TouchableOpacity>
+        </SafeAreaView>
+    )
+}
+
+const SetProfile = () => {
+    const navigation = useNavigation()
+    return (
+        <SafeAreaView className='flex-1 pt-8 px-2 bg-white'>
+            <TouchableOpacity onPress={() => navigation.navigate('setPassword')} className="mb-4">
+                <Ionicons name="chevron-back" size={24} color="black" />
+            </TouchableOpacity>
+            <View className='w-full h-2 bg-gray-300 rounded'>
+                <View className='w-6/6 h-2 bg-[#2DABB1] rounded'></View>
+            </View>
+
+            <Text className='mt-3 text-xl font-bold'>Finish setting up your profile</Text>
+
+            <KeyboardAvoidingView className='mt-2 space-y-3'>
+                <View>
+                    <Text>Your Name</Text>
+                    <TextInput
+                        className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
+                        placeholder='John Doe'
+                    />
+                </View>
+
+                <View>
+                    <Text>Your Bio(optional)</Text>
+                    <TextInput
+                        multiline={true}
+                        numberOfLines={5}
+                        className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
+                        placeholder='A brief description about you'
+                    />
+                </View>
+            </KeyboardAvoidingView>
+
             <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.replace('drawer')} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
                 <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
             </TouchableOpacity>
@@ -164,6 +204,7 @@ const Multistep = () => {
         <Stack.Screen name='code' component={Code} />
         <Stack.Screen name='setPassword' component={SetPassword} />
         <Stack.Screen name='confirmPassword' component={ConfirmPassword} />
+        <Stack.Screen name='setProfile' component={SetProfile} />
     </Stack.Navigator>
   )
 }

@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState } from 'react'
-import { EvilIcons, Octicons } from '@expo/vector-icons'
+import { AntDesign, EvilIcons, MaterialIcons, Octicons } from '@expo/vector-icons'
 
 const Home = ({navigation}) => {
     const data = [
@@ -11,10 +11,27 @@ const Home = ({navigation}) => {
         {
             title: '16th Street',
             location: 'Brooklyn, NY'
-        }
+        },
+        {
+            title: '169th Street',
+            location: 'Brooklyn, NY'
+        },
+        {
+            title: '18th Street Brewery',
+            location: 'Dakley Avenue, Hammond, IN'
+        },
+        {
+            title: '16th Street',
+            location: 'Brooklyn, NY'
+        },
+        {
+            title: '169th Street',
+            location: 'Brooklyn, NY'
+        },
+        
     ]
 
-    const [chats, setChats] = useState(data)
+    const [companies, setCompanies] = useState(data)
     const [searchWord, setSearchWord] = useState('')
 
     const searchFilterFunction = (text) => {
@@ -27,7 +44,7 @@ const Home = ({navigation}) => {
            return itemData.indexOf(searchData) > -1
         })
 
-        setChats(newData)
+        setCompanies(newData)
         setSearchWord(text)
     }
   return (
@@ -54,12 +71,44 @@ const Home = ({navigation}) => {
       <Text className='text-2xl font-bold mt-2'>Find a chat</Text>
       <Text>Select who you want to chat with</Text>
 
+        {/* hide this view when searching */}
+      <View className={searchWord.length === 0 ? "my-3 flex-row justify-between" : 'hidden'}>
+        <TouchableOpacity
+         activeOpacity={0.9} 
+         className='items-center justify-center'
+         onPress={() => navigation.navigate('inbox')}
+        >
+            <View className='bg-[#B2E0E3] p-4 rounded-full'>
+                <AntDesign name="message1" size={24} color="#2DABB1" />
+            </View>
+            <Text className='font-semibold'>Chats</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+         activeOpacity={0.9} 
+         className='items-center justify-center'
+        >
+            <View className='bg-[#B2E0E3] p-4 rounded-full'>
+                <MaterialIcons name="groups" size={24} color="#2DABB1" />
+            </View>
+            <Text className='font-semibold'>Communities</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+         activeOpacity={0.9} 
+         className='items-center justify-center'
+        >
+            <View className='bg-[#B2E0E3] p-4 rounded-full'>
+                <AntDesign name="star" size={24} color="#2DABB1" />
+            </View>
+            <Text className='font-semibold'>Favorites</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView className='mt-4 space-y-3'>
         {
-            chats.length > 0 ?
+            companies.length > 0 ?
 
-            chats.map((chat,i) => (
-                <TouchableOpacity key={i} onPress={() => navigation.navigate('inbox')}>
+            companies.map((chat,i) => (
+                <TouchableOpacity key={i} onPress={() => navigation.navigate('companyProfile')}>
                     <View
                         className='flex-row space-x-3 items-center'
                     >
@@ -75,9 +124,9 @@ const Home = ({navigation}) => {
             <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>Sorry, this company does not exist in our database.</Text>
         }
 
-    <TouchableOpacity className='mt-4 bg-blue-300 px-4 py-2' onPress={() => navigation.navigate('company')}>
+    {/* <TouchableOpacity className='mt-4 bg-blue-300 px-4 py-2' onPress={() => navigation.navigate('company')}>
         <Text>Companies</Text>
-    </TouchableOpacity>
+    </TouchableOpacity> */}
       </ScrollView>
 
       
