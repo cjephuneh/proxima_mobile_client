@@ -67,14 +67,14 @@ const Issues = ({navigation}) => {
             }
       </ScrollView>
 
-      <View className='my-3 flex-row justify-between'>
+      {/* <View className='my-3 flex-row justify-between'>
         <TouchableOpacity className='p-2'>
             <AntDesign name="hearto" size={24} color="#2DABB1" />
         </TouchableOpacity>
         <TouchableOpacity className='bg-[#2DABB1] px-8 py-2 rounded-full'>
             <Text className='font-bold text-white'>Apply Your Thoughts</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </SafeAreaView>
   )
 }

@@ -1,11 +1,10 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, TextInput } from 'react-native'
 import React, { useState } from 'react'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 
 const Issue = () => {
     let users = [1,2,3]
     let replies = [1,2,3]
-    const [messageBoxInputActive, setMessageBoxActive] = useState(false)
 
   return (
     <SafeAreaView className='pt-8 px-3 flex-1'>
@@ -35,7 +34,7 @@ const Issue = () => {
       </View>
 
         {/* Replies */}
-        <ScrollView className='flex-1 my-2 px-4 space-y-4'>
+        <ScrollView className='flex-1 my-2 pl-4 space-y-4'>
             {
                 replies.map((reply, i) => (
                     <View>
@@ -75,12 +74,13 @@ const Issue = () => {
                     </View>
                 ))
             }
-            <KeyboardAvoidingView>
+            <KeyboardAvoidingView className='flex-row items-center space-x-2'>
                 <TextInput
                     placeholder='Add your own thoughts'
                     multiline={true}
-                    className='border border-gray-300 rounded-xl p-2 mt-2'
-                    />
+                    className='border border-gray-300 rounded-xl p-2 mt-2 flex-1'
+                />
+                <Ionicons name="send" size={24} color="#2DABB1" />
             </KeyboardAvoidingView>
         </ScrollView>
 

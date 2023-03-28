@@ -9,6 +9,8 @@ import CreateIssue from '../screens/CreateIssue';
 import CompanyProfile from '../screens/CompanyProfile';
 import Issues from '../screens/Issues';
 import Issue from '../screens/Issue';
+import Community from '../screens/Community';
+import FavoriteOrgs from '../screens/FavoriteOrgs';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +28,8 @@ const AppStackNav = () => {
         <Stack.Screen name='companyProfile' component={CompanyProfile} />
         <Stack.Screen name='issues' component={Issues} />
         <Stack.Screen name='issue' component={Issue} />
+        <Stack.Screen name='community' component={Community} />
+        <Stack.Screen name='favorite' component={FavoriteOrgs} />
         
         {/* the login route should be the last in the list */}
         <Stack.Screen name='login' component={Login} />
