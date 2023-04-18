@@ -1,10 +1,14 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 
 const Issue = () => {
     let users = [1,2,3]
     let replies = [1,2,3]
+
+    const [comment, setComment] = useState(null)
+
+    const scrollViewRef = useRef()
 
   return (
     <SafeAreaView className='pt-8 px-3 flex-1'>
@@ -20,7 +24,7 @@ const Issue = () => {
                             <Image 
                                 key={i}
                                 source={require('../assets/user.png')}
-                                
+                                testID='top-3-member-images'
                             />
                         </View>
                     ))
@@ -34,7 +38,12 @@ const Issue = () => {
       </View>
 
         {/* Replies */}
-        <ScrollView className='flex-1 my-2 pl-4 space-y-4'>
+        <ScrollView 
+            className='flex-1 my-2 pl-4 space-y-4' 
+            showsVerticalScrollIndicator={false}
+            ref={scrollViewRef}
+            testID='reply-section'
+        >
             {
                 replies.map((reply, i) => (
                     <View>
@@ -58,7 +67,7 @@ const Issue = () => {
                                             <Image 
                                                 key={i}
                                                 source={require('../assets/user.png')}
-                                    
+                                     
                                             />
                                         </View>
                                     ))
@@ -66,7 +75,7 @@ const Issue = () => {
                     
                             </View>
 
-                            <TouchableOpacity className='flex-row space-x-1'>
+                            <TouchableOpacity testID='upvote-btn' activeOpacity={0.9} className='flex-row space-x-1'>
                                 <AntDesign name="hearto" size={18} color="#2DABB1" />
                                 <Text className='font-semibold text-[#2DABB1]'>154</Text>
                             </TouchableOpacity>
@@ -76,11 +85,16 @@ const Issue = () => {
             }
             <KeyboardAvoidingView className='flex-row items-center space-x-2'>
                 <TextInput
+                    testID='comment-input'
                     placeholder='Add your own thoughts'
                     multiline={true}
                     className='border border-gray-300 rounded-xl p-2 mt-2 flex-1'
+                    value={comment}
+                    onChangeText={text => setComment(text)}
                 />
-                <Ionicons name="send" size={24} color="#2DABB1" />
+                <TouchableOpacity testID='send-btn' disabled={!comment || comment.trim()} activeOpacity={0.9}>
+                    <Ionicons name="send" size={24} color="#2DABB1" />
+                </TouchableOpacity>
             </KeyboardAvoidingView>
         </ScrollView>
 
@@ -88,7 +102,10 @@ const Issue = () => {
         <TouchableOpacity className='p-2'>
             <AntDesign name="hearto" size={24} color="#2DABB1" />
         </TouchableOpacity>
-        <TouchableOpacity className='bg-[#2DABB1] px-8 py-2 rounded-full'>
+        <TouchableOpacity 
+            className='bg-[#2DABB1] px-8 py-2 rounded-full'
+            onPress={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+        >
             <Text className='font-bold text-white'>Apply Your Thoughts</Text>
         </TouchableOpacity>
       </View>

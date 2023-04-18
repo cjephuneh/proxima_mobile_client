@@ -11,6 +11,7 @@ import Issues from '../screens/Issues';
 import Issue from '../screens/Issue';
 import Community from '../screens/Community';
 import FavoriteOrgs from '../screens/FavoriteOrgs';
+import Communities from '../screens/Communities';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ const AppStackNav = () => {
         <Stack.Screen name='companyProfile' component={CompanyProfile} />
         <Stack.Screen name='issues' component={Issues} />
         <Stack.Screen name='issue' component={Issue} />
+        <Stack.Screen name='communities' component={Communities} />
         <Stack.Screen name='community' component={Community} />
         <Stack.Screen name='favorite' component={FavoriteOrgs} />
         

@@ -1,10 +1,15 @@
 import { View, Text, SafeAreaView, KeyboardAvoidingView, ScrollView, TextInput, TouchableOpacity, Keyboard } from 'react-native'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-const Chat = ({navigation}) => {
+const Chat = () => {
+    const navigation = useNavigation()
+
+    const [message, setMessage] = useState(null)
+
     const scrollViewRef = useRef();
-    const messages = [
+    const msgs = [
         {
             message: 'Hi Mandy',
             sender: 'Me',
@@ -31,6 +36,18 @@ const Chat = ({navigation}) => {
         }
     ]
 
+    const [messages, setMessages] = useState(msgs)
+
+    const sendMessage = () => {
+        let trimmedMessage = message.trim()
+        setMessages([...messages, {
+            message: trimmedMessage,
+            sender: 'Me',
+            typing: false
+        }])
+        setMessage(null)
+    }
+
     // autoscroll when the keyboard is activated 
     useEffect(() => {
         const listenToKeyboard = Keyboard.addListener('keyboardDidShow',
@@ -46,7 +63,7 @@ const Chat = ({navigation}) => {
   return (
     <SafeAreaView className='flex-1 bg-white pt-8 px-3 relative'>
       <View className='flex-row items-center justify-between'>
-        <TouchableOpacity onPress={() => navigation.navigate('inbox')}>
+        <TouchableOpacity testID='close-button' onPress={() => navigation.navigate('inbox')}>
         <AntDesign name="close" size={24} color="black" />
         </TouchableOpacity>
         <Ionicons name="person-add-outline" size={24} color="black" />
@@ -63,7 +80,7 @@ const Chat = ({navigation}) => {
             {
                 messages.map((message, index) => (
                     <Text key={index} 
-                        className={message.sender === 'Me' ? 'bg-[#2DABB1] px-4 py-2 rounded-full text-white w-fit self-end' : 'bg-gray-300 px-4 py-2 rounded-full text-black w-fit self-start'}
+                        className={message.sender === 'Me' ? 'bg-[#2DABB1] px-4 py-2 rounded text-white w-fit self-end' : 'bg-gray-300 px-4 py-2 rounded text-black w-fit self-start'}
                     >
                         {message.message ? message.message : 'Typing...'}
                     </Text>
@@ -71,12 +88,27 @@ const Chat = ({navigation}) => {
             }
         
         </ScrollView>
-        <View className='my-4 flex-row items-center border border-gray-300 px-4 py-2 rounded-full'>
+        <View className='my-4 flex-row items-end'>
+           <View className='flex-row flex-1 items-center border border-gray-300 px-4 py-2 rounded-md'>
             <TextInput
-                placeholder='Type your message'
-                className='flex-1'
-             />
-             <FontAwesome name="microphone" size={24} color="#2DABB1" />
+                    placeholder='Type your message'
+                    className='flex-1'
+                    multiline
+                    value={message}
+                    onChangeText={text => setMessage(text)}
+                    style={{
+                        maxHeight: 90,
+                        height: 'auto'
+                    }}
+                    testID='message-input'
+                />
+                <TouchableOpacity activeOpacity={0.9} className={message ? 'hidden' : 'pl-2'}>
+                    <FontAwesome name="microphone" size={24} color="#2DABB1" />
+                </TouchableOpacity>
+           </View>
+           <TouchableOpacity testID='send-btn' activeOpacity={0.9} disabled={!message} onPress={() => sendMessage()} className='px-2 py-1 mb-2'>
+                <FontAwesome name="send" size={24} color="#2DABB1" />
+           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

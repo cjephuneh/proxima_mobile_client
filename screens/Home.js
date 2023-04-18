@@ -1,8 +1,10 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import { AntDesign, EvilIcons, MaterialIcons, Octicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
-const Home = ({navigation}) => {
+const Home = () => {
+    const navigation = useNavigation()
     const data = [
         {
             title: '18th Street Brewery',
@@ -55,17 +57,18 @@ const Home = ({navigation}) => {
             <EvilIcons name="search" size={24} color="black" />
             <TextInput
                 className='flex-1'
-                placeholder='Search chats'
+                placeholder='Search Organizations'
                 value={searchWord}
                 onChangeText={(text) => searchFilterFunction(text)}
             />
         </View>
-    <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.openDrawer()}
-    >
-        <Image source={require('../assets/user.png')} />
-    </TouchableOpacity>
+        <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.openDrawer()}
+            testID='profile-pic'
+        >
+            <Image source={require('../assets/user.png')} />
+        </TouchableOpacity>
     </View>
       
       <Text className='text-2xl font-bold mt-2'>Find a chat</Text>
@@ -86,7 +89,7 @@ const Home = ({navigation}) => {
         <TouchableOpacity
          activeOpacity={0.9} 
          className='items-center justify-center'
-         onPress={() => navigation.navigate('community')}
+         onPress={() => navigation.navigate('communities')}
         >
             <View className='bg-[#B2E0E3] p-4 rounded-full'>
                 <MaterialIcons name="groups" size={24} color="#2DABB1" />

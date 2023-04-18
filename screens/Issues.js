@@ -1,8 +1,11 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-const Issues = ({navigation}) => {
+const Issues = () => {
+    const navigation = useNavigation()
+
     let users = [1,2,3]
     let issues = [1,2,3]
     let tags = [1,2,3]
@@ -18,6 +21,7 @@ const Issues = ({navigation}) => {
                         <Image 
                             key={i}
                             source={require('../assets/user.png')}
+                            testID='top-3-user-images'
                             
                         />
                     </View>
@@ -31,21 +35,24 @@ const Issues = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView className='mt-4 space-y-4 flex-1'>
+      <ScrollView className='mt-4 space-y-4 flex-1' showsVerticalScrollIndicator={false}>
             {
-                issues.map((issue, i) => (
-                    <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('issue')} key={i}>
+                issues.map(issue => (
+                    <TouchableOpacity testID='issue-btn' activeOpacity={0.9} onPress={() => navigation.navigate('issue')} key={issues.indexOf(issue)}>
                         <Text className="text-xl font-bold">Issue with last week's milk</Text>
-                        <Text className="text-gray-500 text-xs">Raised by John Doe • Nov 25, 2020</Text>
-                        <Image 
-                            className='mt-2 w-full rounded'
-                            resizeMode='cover'
-                            source={require('../assets/company.png')}
+                        <View testID='issue-owner'>
+                            <Text className="text-gray-500 text-xs">Raised by John Doe • Nov 25, 2020</Text>
+                            <Image 
+                                className='mt-2 w-full rounded'
+                                resizeMode='cover'
+                                source={require('../assets/company.png')}
+                                
                         />
+                        </View>
                         <View className='flex-row space-x-3 mt-3'>
                             {
-                                tags.map((tag, i) => (
-                                    <Text key={i} className='bg-gray-300 px-3 py-1 rounded-full'>bad milk</Text>
+                                tags.map((tag) => (
+                                    <Text testID='issue-tags' key={tags.indexOf(tag)} className='bg-gray-300 px-3 py-1 rounded-full'>bad milk</Text>
                                 ))
                             }
                         </View>

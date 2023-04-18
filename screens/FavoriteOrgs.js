@@ -1,8 +1,10 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import { AntDesign, EvilIcons, MaterialIcons, Octicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
-const FavoriteOrgs = ({navigation}) => {
+const FavoriteOrgs = () => {
+    const navigation = useNavigation()
     const data = [
         {
             title: '18th Street Brewery',
@@ -75,7 +77,7 @@ const FavoriteOrgs = ({navigation}) => {
             companies.length > 0 ?
 
             companies.map((chat,i) => (
-                <TouchableOpacity key={i} onPress={() => navigation.navigate('companyProfile')}>
+                <TouchableOpacity testID='org-btn' key={i} onPress={() => navigation.navigate('companyProfile')}>
                     <View
                         className='flex-row justify-between'
                     >

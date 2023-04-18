@@ -1,7 +1,7 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { logout } from '../../redux/slice/authSlice' 
+import { logout } from '../../redux/slice/auth/authSlice' 
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
 

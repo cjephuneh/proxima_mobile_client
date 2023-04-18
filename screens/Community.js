@@ -1,8 +1,10 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { AntDesign, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
-const Community = ({navigation}) => {
+const Community = () => {
+  const navigation = useNavigation()
   let users = [1,2,3]
 
   return (
