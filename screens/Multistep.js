@@ -6,7 +6,8 @@ const Stack = createNativeStackNavigator();
 import { Ionicons } from '@expo/vector-icons';
 import { setAuthCode, setGoal, setUserConfirmPassword, setUserEmail, setUserPassword, setUserProfile } from '../redux/slice/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { Formik } from 'formik';
+import * as yup from 'yup'
 
 export const Goal = () => {
     const navigation = useNavigation()
@@ -61,19 +62,16 @@ export const Goal = () => {
 export const Email = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
-    
-    const [email, setEmail] = useState(null)
-    
-    // handle form validation
-    const [validationStyles, setValidationStyles] = useState('mt-2 ml-2 text-sm text-red-600 hidden')
 
-    const validateEmail = () => {
-        if(!email){
-            setValidationStyles('mt-2 ml-2 text-sm text-red-600')
-            return;
-        }
-
-        dispatch(setUserEmail(email))
+    const emailValidationSchema = yup.object().shape({
+        email: yup
+            .string()
+            .email('Invalid email address')
+            .required('Required'),
+    }) 
+    
+    const submitEmail = (values) => {
+        dispatch(setUserEmail(values.email))
         
         navigation.navigate('code')
     }
@@ -89,19 +87,32 @@ export const Email = () => {
 
             <Text className='mt-3 text-xl font-bold'>What is your email address?</Text>
 
-            <TextInput
-                className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
-                placeholder='you@email.com'
-                value={email}
-                onChangeText={text => setEmail(text)}
-                testID='email-input'
-             />
+            <Formik
+                validationSchema={emailValidationSchema}
+                initialValues={{email: ''}}
+                onSubmit={submitEmail}
+            >
+                {
+                    ({ handleChange, handleBlur, handleSubmit, values, errors, isValid, touched}) => (
+                        <>
+                            <TextInput
+                                className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
+                                placeholder='you@email.com'
+                                value={values.email}
+                                onChangeText={handleChange('email')}
+                                onBlur={handleBlur('email')}
+                                testID='email-input'
+                            />
 
-             <Text testID='email-validation-text' className={validationStyles}>Email is required</Text>
+                            {errors.email && touched.email && <Text testID='email-validation-text' className='mt-2 ml-2 text-sm text-red-600'>{errors.email}</Text>}
 
-            <TouchableOpacity testID='submit-email-btn' activeOpacity={0.9} onPress={() => validateEmail()} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
-                <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
-            </TouchableOpacity>
+                            <TouchableOpacity testID='submit-email-btn' activeOpacity={0.9} onPress={handleSubmit} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
+                                <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
+                            </TouchableOpacity>
+                        </>
+                    )
+                }
+                </Formik>
         </SafeAreaView>
     )
 }
@@ -112,17 +123,18 @@ export const Code = () => {
 
     const email = useSelector(state => state.auth.email)
 
-    const [code, setCode] = useState(null)
+    const authCodeValidationSchema = yup.object().shape({
+        code: yup
+            .string()
+            .matches(/^[0-9]+$/, "Must be digits only")
+            .min(4)
+            .max(4)
+            .required('Required'),
+    }) 
 
-    // handle form validation
-    const [validationStyles, setValidationStyles] = useState('mt-2 ml-2 text-sm text-red-600 hidden')
-
-    const validateCode = () => {
-        if(!code){
-            setValidationStyles('mt-2 ml-2 text-sm text-red-600')
-            return
-        }
-        dispatch(setAuthCode(code))
+    const submitAuthCode = (values) => {
+        // console.log(values)
+        dispatch(setAuthCode(values.code))
 
         navigation.navigate('setPassword')
     }
@@ -141,19 +153,33 @@ export const Code = () => {
             Enter the 4-digit code that we have sent to the email address <Text className='font-bold'>{email}</Text>
             </Text>
 
-            <TextInput
-                className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
-                placeholder='1234'
-                value={code}
-                onChangeText={text => setCode(text)}
-                testID='code-input'
-             />
+            <Formik
+                validationSchema={authCodeValidationSchema}
+                initialValues={{code: ''}}
+                onSubmit={submitAuthCode}
+            >
+                {
+                    ({ handleChange, handleBlur, handleSubmit, values, errors, isValid, touched }) => (
+                        <>
+                            <TextInput
+                                className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
+                                placeholder='1234'
+                                value={values.code}
+                                onChangeText={handleChange('code')}
+                                onBlur={handleBlur('code')}
+                                testID='code-input'
+                            />
 
-            <Text testID='code-validation' className={validationStyles}>Authentication code is required</Text>
+                            {errors.code && touched.code && <Text testID='code-validation' className='mt-2 ml-2 text-sm text-red-600'>{errors.code}</Text>}
 
-            <TouchableOpacity activeOpacity={0.9} onPress={() => validateCode()} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
-                <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
-            </TouchableOpacity>
+                            <TouchableOpacity activeOpacity={0.9} onPress={handleSubmit} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
+                                <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
+                            </TouchableOpacity>
+                        </>
+                    )
+                }
+
+            </Formik>
 
             <TouchableOpacity className='mt-4'>
                 <Text className='text-[#2DABB1] text-center text-lg font-semibold'>
@@ -168,18 +194,15 @@ export const SetPassword = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
 
-    const [password, setPassword] = useState(null)
+    const passwordValidationSchema = yup.object().shape({
+        password: yup
+            .string()
+            .min(6, 'Your password must be at least 6 characters long')
+            .required('Required'),
+    }) 
 
-    // handle form validation
-    const [validationStyles, setValidationStyles] = useState('mt-2 ml-2 text-sm text-red-600 hidden')
-
-    const validatePassword = () => {
-        if(!password){
-            setValidationStyles('mt-2 ml-2 text-sm text-red-600')
-            return;
-        }
-
-        dispatch(setUserPassword(password))
+    const submitPassword = (values) => {
+        dispatch(setUserPassword(values.password))
         navigation.navigate('confirmPassword')
     }
 
@@ -194,19 +217,33 @@ export const SetPassword = () => {
 
             <Text className='mt-3 text-xl font-bold'>Set a password</Text>
 
-            <TextInput
-                className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
-                placeholder='your password'
-                secureTextEntry={true}
-                value={password}
-                onChangeText={text => setPassword(text)}
-                testID='password-input'
-             />
+            <Formik
+                initialValues={{password: ''}}
+                validationSchema={passwordValidationSchema}
+                onSubmit={submitPassword}
+            >
+                {
+                    ({ values, errors, handleBlur, handleChange, handleSubmit, touched }) => (
+                        <>
+                            <TextInput
+                                className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
+                                placeholder='your password'
+                                secureTextEntry={true}
+                                value={values.password}
+                                onChangeText={handleChange('password')}
+                                onBlur={handleBlur('password')}
+                                testID='password-input'
+                            />
 
-             <Text testID='password-validation' className={validationStyles}>Password is required</Text>
-            <TouchableOpacity activeOpacity={0.9} onPress={() => validatePassword()} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
-                <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
-            </TouchableOpacity>
+                            { errors.password && touched.password && <Text testID='password-validation' className='mt-2 ml-2 text-sm text-red-600'>{errors.password}</Text>}
+
+                            <TouchableOpacity activeOpacity={0.9} onPress={handleSubmit} className='bg-[#2DABB1] mt-16 px-4 py-2 w-full rounded-full'>
+                                <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
+                            </TouchableOpacity>
+                        </>
+                    )
+                }
+            </Formik>
         </SafeAreaView>
     )
 }
@@ -215,6 +252,7 @@ export const ConfirmPassword = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const password = useSelector(state => state.auth.password)
+    
 
     const [confirmPassword, setConfirmPassword] = useState(null)
 
@@ -245,6 +283,7 @@ export const ConfirmPassword = () => {
                 className='mt-4 border border-gray-300 px-4 py-2 rounded-lg'
                 placeholder='confirm password'
                 value={confirmPassword}
+                secureTextEntry
                 onChangeText={text => setConfirmPassword(text)}
                 testID='confirm-password-input'
              />
