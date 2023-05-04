@@ -1,69 +1,108 @@
 import { View, Text, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, TextInput, Touchable } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
-import { login } from '../redux/slice/authSlice'
+import { login, signin } from '../redux/slice/auth/authSlice'
+import { Formik } from 'formik';
+import * as yup from 'yup'
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
 
-  const handleLogin = () => {
-    dispatch(login())
+  const loginValidationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .email('Invalid email address')
+      .required('Required'),
+    password: yup
+      .string()
+      .required('Required')
+  }) 
+
+  const handleLogin = (values) => {
+    console.log(values)
+    dispatch(login()) // for testing purposes only. to be removed and activate signin
+    // dispatch(signin({values.email, values.password}))
     navigation.replace('drawer')
   }
   return (
     <SafeAreaView className='bg-white flex-1 px-4'>
       <View className='pt-8 flex-row items-center'>
-        <TouchableOpacity activeoPacity={0.2} onPress={() => navigation.navigate('onBoarding')}>
+        <TouchableOpacity activeoPacity={0.2} onPress={() => navigation.navigate('onBoarding')} testID='back-button'>
         <Ionicons name="chevron-back" size={28} color="black" />
         </TouchableOpacity>
         <View className=' -mx-6 w-full'>
-        <Text className='text-xl text-center'>Log in</Text>
+        <Text className='text-xl text-center' testID='screen-title'>Log in</Text>
         </View>
       </View>
 
       <KeyboardAvoidingView behavior='padding' className='justify-between py-8'>
-        <View>
-            <View className='border border-gray-300 p-2 rounded-xl'>
-                <Text className=''>Email</Text>
-                <TextInput
-                    className=''
-                    placeholder='you@email.com'
-                 />
-            </View>
-            <View className='border border-gray-300 mt-4 rounded-xl'>
-                <TextInput
-                    placeholder='password'
-                    className='p-2'
-                 />
-            </View>
-            <TouchableOpacity className='mt-4 text-[#2DABB1]'>
-                <Text className='text-[#2DABB1]'>
-                    Forgot password?
-                </Text>
-            </TouchableOpacity>
-        </View>
+        <Formik
+          validationSchema={loginValidationSchema}
+          initialValues={{email: '', password: ''}}
+          onSubmit={handleLogin}
+        >
+          {
+            ({ handleChange, handleBlur, handleSubmit, values, errors, isValid, touched}) => (
+              <View>
+                <View className='border border-gray-300 p-2 rounded-xl'>
+                    <Text className=''>Email</Text>
+                    <TextInput
+                        name='email'
+                        placeholder='you@email.com'
+                        value={values.email}
+                        onChangeText={handleChange('email')}
+                        onBlur={handleBlur('email')}
+                    />
+                </View>
 
-        <View className='mt-4 flex-row space-x-2'>
-            <Text>No account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('multistep')}>
-                <Text className='text-[#2DABB1]'>Sign up</Text>
-            </TouchableOpacity>
-        </View>
+                {errors.email && touched.email && <Text className='mt-2 ml-2 text-sm text-red-600' testID='email-validation-text'>{errors.email}</Text>}
 
-        <View className='mt-12'>
-            <Text>
-                By continuing, you agree to our <Text className='text-[#2DABB1]'>Terms of Service</Text> and our <Text className='text-[#2DABB1]'>Privacy Policy</Text>.
-            </Text>
+                <View className='border border-gray-300 mt-4 p-2 rounded-xl'>
+                    <TextInput
+                        name='password'
+                        placeholder='password'
+                        secureTextEntry={true}
+                        value={values.password}
+                        onChangeText={handleChange('password')}
+                        onBlur={handleBlur('password')}
+                    />
+                </View>
 
-            <TouchableOpacity 
-              onPress={handleLogin} 
-              activeOpacity={0.9} 
-              className='bg-[#2DABB1] mt-8 px-6 py-3 w-full rounded-full'
-            >
-              <Text className='text-white text-center text-xl font-semibold'>Log in</Text>
-            </TouchableOpacity>
-        </View>
+                {errors.password && touched.password && <Text className='mt-2 ml-2 text-sm text-red-600' testID='password-validation-text'>{errors.password}</Text>}
+
+                <TouchableOpacity className='mt-4 text-[#2DABB1]'>
+                    <Text className='text-[#2DABB1]'>
+                        Forgot password?
+                    </Text>
+                </TouchableOpacity>
+
+                <View className='mt-4 flex-row space-x-2'>
+                  <Text>No account?</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate('multistep')} testID='signup-button'>
+                      <Text className='text-[#2DABB1]'>Sign up</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View className='mt-12'>
+                    <Text>
+                        By continuing, you agree to our <Text className='text-[#2DABB1]'>Terms of Service</Text> and our <Text className='text-[#2DABB1]'>Privacy Policy</Text>.
+                    </Text>
+
+                    <TouchableOpacity 
+                      disabled={!isValid}
+                      onPress={handleSubmit} 
+                      activeOpacity={0.9} 
+                      className='bg-[#2DABB1] mt-8 px-6 py-3 w-full rounded-full'
+                      testID='login-button'
+                    >
+                      <Text className='text-white text-center text-xl font-semibold'>Log in</Text>
+                    </TouchableOpacity>
+                </View>
+              </View>
+            )
+          }
+        </Formik>
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
