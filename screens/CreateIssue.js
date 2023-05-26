@@ -1,13 +1,13 @@
 import { View, Text, SafeAreaView, Image, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import React, { useState } from 'react'
-import { Entypo, EvilIcons, Ionicons } from '@expo/vector-icons'
+import { AntDesign, Entypo, EvilIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 
 const CreateIssue = () => {
-    const tagsData = [
-        'milk',
-        'food',
-        'general'
-    ]
+    // const tagsData = [
+    //     'milk',
+    //     'food',
+    //     'general'
+    // ]
 
     const organizations = [
       {
@@ -41,6 +41,7 @@ const CreateIssue = () => {
     const [issueTitle, setIssueTitle] = useState(null)
     const [issueDescription, setIssueDescription] = useState(null)
     const [tags, setTags] = useState([])
+    const [tag, setTag] = useState('')
 
     const filteredOrgs = organizations.filter(org => org.title.toLowerCase().includes(searchText.toLowerCase()))
 
@@ -59,7 +60,7 @@ const CreateIssue = () => {
         <Text className='font-semibold text-lg'>Kevin Kimani</Text>
       </View>
 
-      <KeyboardAvoidingView className='space-y-3'>
+      <KeyboardAvoidingView className='space-y-3' behavior='height'>
         <View className='flex-row items-center mt-3 space-x-3 bg-gray-200 px-2 py-1 rounded'>
             <EvilIcons name="search" size={24} color="black" />
             <TextInput
@@ -117,17 +118,34 @@ const CreateIssue = () => {
 
         <Text>Add tags for your issue to make it easy to find</Text>
 
-        <View className='flex-row space-x-2'>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} className='flex-row gap-2 flex-wrap'>
             {
-                tagsData.map((tag, i) => (
-                    <TouchableOpacity key={i} activeOpacity={0.9} onPress={() => {
-                      tags.includes(tag) ? setTags(tags.filter(tg => tg !== tag)) : setTags([...tags, tag])
-                    }}>
-                      <Text className={tags.includes(tag) ? 'bg-[#2DABB1] px-4 py-2 rounded font-semibold text-white' : 'bg-gray-200 px-4 py-2 rounded'}>{tag}</Text>
-                    </TouchableOpacity>
+                tags.map((tag, i) => (
+                  <View key={i} className='bg-gray-200 flex-row items-center rounded'>
+                      <Text className= 'px-2 py-1 rounded font-semibold'>{tag}</Text>
+                      <TouchableOpacity activeOpacity={0.9} className='p-1' onPress={() => setTags(tags.filter(tg => tg !== tag))}>
+                        <MaterialCommunityIcons name="delete" size={16} color="red" />
+                      </TouchableOpacity>
+                  </View>
                 ))
             }
+        </ScrollView>
+
+        <View className='space-y-3'>
+          <View className='flex-row items-center gap-3'>
+            <TextInput
+                className='flex-1 bg-gray-200 px-4 py-2 rounded'
+                placeholder='Add your issue tag here'
+                value={tag}
+                onChangeText={text => setTag(text)}
+            />
+            <TouchableOpacity disabled={tag === ''} activeOpacity={0.9} onPress={() => setTags([...tags, tag])} className='p-2 bg-[#2DABB1] rounded'>
+              <AntDesign name="plus" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
         </View>
+
+        
 
         <TouchableOpacity activeOpacity={0.9} onPress={() => createIssue()} className='flex-row space-x-2 items-center bg-[#2DABB1] self-start px-4 py-2 rounded-full mt-2'>
             <Text className='text-white font-semibold'>Send</Text>

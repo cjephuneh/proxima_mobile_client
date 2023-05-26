@@ -1,19 +1,58 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/slice/auth/authSlice' 
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const DrawerContent = (props) => {
     const dispatch = useDispatch()
     const navigation = useNavigation()
+    const [user, setUser] = useState(null)
 
-    const handleLogout = () => {
+    // dispatch the logout reducer which set the user to null
+    // remove user info from local storage
+    // current closing drawer and redirecting to login manually
+    // TODO: Try and find a fix to force the MainStackNav to rerender on user state change
+    const handleLogout = async () => {
         dispatch(logout())
         props.navigation.closeDrawer()
+        await removeInfo()
         navigation.replace('login')
     }
+
+    // remove user info from local storage
+    const removeInfo = async () => {
+      try {
+        await AsyncStorage.removeItem('user')
+      } catch (error) {
+        console.log('Error')
+      }
+    }
+
+    // retrieve user info from local storage
+    const getInfo = async () => {
+      try {
+        const value = await AsyncStorage.getItem('user')        
+        return value !== null ? JSON.parse(value) : null
+      } catch (error) {
+        return null
+      }
+    }
+
+    // update state with the retrieved info
+    const setUserInfo = async () => {
+      let userInfo = await getInfo()
+      setUser(userInfo)
+      console.log('user info ', userInfo)
+    }
+
+    // run the setUserinfo function once on page load
+    useEffect(() => {
+      setUserInfo()
+    }, [])
+
   return (
     <SafeAreaView className='my-8 mx-3 flex-1 justify-between bg-white'>
       <View>
@@ -44,7 +83,7 @@ const DrawerContent = (props) => {
           <Text className='bg-gray-200 px-2 py-1'>ACCOUNT INFORMATION</Text>
           <View className='flex-row justify-between mt-2'>
             <Text>Email</Text>
-            <Text>jon@email.com</Text>
+            <Text>{user && user.email}</Text>
           </View>
         </View>
 

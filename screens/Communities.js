@@ -7,7 +7,7 @@ const Communities = () => {
     const navigation = useNavigation()
     const data = [
         {
-            title: 'Delmonte',
+            title: 'Maziwa Industries',
             location: 'Thika, Kenya'
         },
         {

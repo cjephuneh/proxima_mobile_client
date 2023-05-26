@@ -26,9 +26,9 @@ const initialState = {
 }
 
 // retrieveChats
-export const retrieveChats = createAsyncThunk('chat/retrieveChats', async (chatsData, thunkAPI) => {
+export const retrieveChats = createAsyncThunk('chat/retrieveChats', async (thunkAPI) => {
     try {
-        return await chatService.retrieveChats(chatsData)
+        return await chatService.retrieveChats({client_id: 2})
     } catch(error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()

@@ -1,15 +1,47 @@
 import axios from "axios";
+import { ApiUrls } from "../../../utils/ApiUrls";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const signinUser = async (userData) => {
-    const response = await axios.post('/', userData)
+    const { data } = await axios.post(ApiUrls.LOGIN_ENDPOINT, userData)
 
-    return response.data
+    if(data.token){
+        const storeUserInfo = async () => {
+            try {
+                await AsyncStorage.setItem('user', JSON.stringify(data))
+            } catch (error) {
+                console.log('error storing the value')
+            }
+        }
+    
+        await storeUserInfo()
+
+        return data
+    } else {
+        return Promise.reject({
+            message: 'Incorrect user credentials'
+        })
+    }
 }
 
 const registerUser = async (userData) => {
-    const response = await axios.post('/', userData)
+    const { data } = await axios.post(ApiUrls.REGISTER_ENDPOINT, userData)
 
-    return response.data
+    if(data.token){
+        const storeUserInfo = async () => {
+            try {
+                await AsyncStorage.setItem('user', JSON.stringify(data))
+            } catch (error) {
+                console.log('error storing the value')
+            }
+        }
+    
+        await storeUserInfo()
+
+        return data
+    } else {
+        return Promise.reject(data.errors)
+    }
 }
 
 const sendAuthCode = async (userEmail) => {

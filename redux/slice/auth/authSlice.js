@@ -31,14 +31,19 @@ const initialState = {
     authCode: null,
     password: null,
     confirmPassword: null,
-    name: null,
-    bio: null
+    username: null,
+    firstName: null,
+    lastName: null,
+    gender: null,
+    dateOfBirth: null,
+    phoneNumber: null
 }
 
 // allow all users to sign in
-export const signin = createAsyncThunk('auth/signin', async (user, thunkAPI) => {
+export const signin = createAsyncThunk('auth/signin', async (loginData, thunkAPI) => {
     try {
-        return await authService.signinUser(user)
+        return await authService.signinUser(loginData)
+        // console.log(user)
     } catch(error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -69,12 +74,14 @@ export const verifyAuthCode = createAsyncThunk('auth/verifycode', async (userEma
 })
 
 // allow users to register
-export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
+export const register = createAsyncThunk('auth/register', async (registerData, thunkAPI) => {
     try {
-        return await authService.registerUser(user)
+                console.log(registerData)
+
+        return await authService.registerUser(registerData)
     } catch(error) {
         console.error(error)
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        const message = error
         return thunkAPI.rejectWithValue(message)
     }
 })
@@ -109,7 +116,12 @@ export const authSlice = createSlice({
         },
         setUserProfile: (state, action) => {
             state.name = action.payload.name
-            state.bio = action.payload.bio
+            state.username = action.payload.username,
+            state.firstName = action.payload.firstName,
+            state.lastName = action.payload.lastName,
+            state.gender = action.payload.gender,
+            state.dateOfBirth = action.payload.dateOfBirth,
+            state.phoneNumber = action.payload.phoneNumber
         }
     },
     extraReducers: (builder) =>

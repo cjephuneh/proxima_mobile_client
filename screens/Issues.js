@@ -41,7 +41,7 @@ const Issues = () => {
                     <TouchableOpacity testID='issue-btn' activeOpacity={0.9} onPress={() => navigation.navigate('issue')} key={issues.indexOf(issue)}>
                         <Text className="text-xl font-bold">Issue with last week's milk</Text>
                         <View testID='issue-owner'>
-                            <Text className="text-gray-500 text-xs">Raised by John Doe • Nov 25, 2020</Text>
+                            <Text className="text-gray-500 text-xs">Raised by John Isaacs • Nov 25, 2020</Text>
                             <Image 
                                 className='mt-2 w-full rounded'
                                 resizeMode='cover'

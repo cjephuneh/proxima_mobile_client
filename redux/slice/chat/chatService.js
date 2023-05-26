@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ApiUrls } from "../../../utils/ApiUrls";
 
 const sendMessage = async () => {
     const response = await axios.post('/', messageData)
@@ -7,13 +8,17 @@ const sendMessage = async () => {
 }
 
 const retrieveMessages = async () => {
-    const response = await axios.post('/', messagesData)
+    const { data } = await axios.post('/', messagesData)
 
-    return response.data
+    if(data){
+        return data
+    } else {
+        return Promise.reject(data.errors)
+    }
 }
 
-const retrieveChats = async () => {
-    const response = await axios.post('/', chatsData)
+const retrieveChats = async (userData) => {
+    const response = await axios.get(`${ApiUrls.retrieve_chats}?chat_owner=${userData.client_id}`)
 
     return response.data
 }

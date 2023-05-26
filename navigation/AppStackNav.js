@@ -12,6 +12,9 @@ import Issue from '../screens/Issue';
 import Community from '../screens/Community';
 import FavoriteOrgs from '../screens/FavoriteOrgs';
 import Communities from '../screens/Communities';
+import Surveys from '../screens/Surveys';
+import Survey from '../screens/Survey';
+import SurveyQuestions from '../screens/SurveyQuestions';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +35,9 @@ const AppStackNav = () => {
         <Stack.Screen name='communities' component={Communities} />
         <Stack.Screen name='community' component={Community} />
         <Stack.Screen name='favorite' component={FavoriteOrgs} />
+        <Stack.Screen name='surveys' component={Surveys} />
+        <Stack.Screen name='survey' component={Survey} />
+        <Stack.Screen name='surveyQuestions' component={SurveyQuestions} />
         
         {/* the login route should be the last in the list */}
         <Stack.Screen name='login' component={Login} />
