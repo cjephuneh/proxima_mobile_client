@@ -327,7 +327,7 @@ export const SetProfile = () => {
         const day = String(selectedDate.getDate()).padStart(2, '0');
         setUserDate(`${year}-${month}-${day}`)
     };
-    
+
     const profileValidationSchema = yup.object().shape({
         username: yup
             .string()
@@ -505,7 +505,7 @@ export const SetProfile = () => {
                                         <View className='flex-row gap-2'>
                                             <Text>Date of Birth</Text>
                                             <TouchableOpacity onPress={() => setShow(true)}>
-                                                <Feather name="calendar" size={20} color="black" />
+                                                <Feather name="calendar" size={16} color="black" />
                                             </TouchableOpacity>
                                         </View>
                                         {
