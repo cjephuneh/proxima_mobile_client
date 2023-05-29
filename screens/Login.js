@@ -9,6 +9,8 @@ import * as yup from 'yup'
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
 
+  const { isUserLoading } = useSelector((state) => state.auth)
+
   const loginValidationSchema = yup.object().shape({
     email: yup
       .string()
@@ -91,13 +93,13 @@ const Login = ({ navigation }) => {
                     </Text>
 
                     <TouchableOpacity 
-                      disabled={!isValid}
+                      disabled={isValid && isUserLoading}
                       onPress={handleSubmit} 
                       activeOpacity={0.9} 
                       className='bg-[#2DABB1] mt-8 px-6 py-3 w-full rounded-full'
                       testID='login-button'
                     >
-                      <Text className='text-white text-center text-xl font-semibold'>Log in</Text>
+                      <Text className='text-white text-center text-xl font-semibold'>{isUserLoading ? 'Please wait...' : 'Log in'}</Text>
                     </TouchableOpacity>
                 </View>
               </View>

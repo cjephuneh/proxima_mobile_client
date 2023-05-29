@@ -346,7 +346,7 @@ export const SetProfile = () => {
             .required()
     }) 
 
-    const { email, password, confirmPassword, isUserError, isUserSuccess, isUserMessage } = useSelector((state) => state.auth)
+    const { email, password, confirmPassword, isUserError, isUserSuccess, isUserMessage, isUserLoading } = useSelector((state) => state.auth)
     
     const submitProfile = (values) => {
 
@@ -543,7 +543,7 @@ export const SetProfile = () => {
                                 </View>
 
                                 <TouchableOpacity activeOpacity={0.9} onPress={handleSubmit} className='bg-[#2DABB1] z-0 mt-16 px-4 py-2 w-full rounded-full'>
-                                    <Text className='text-white text-center text-xl font-semibold'>Continue</Text>
+                                    <Text className='text-white text-center text-xl font-semibold'>{isUserLoading ? 'Please wait...' : 'Continue'}</Text>
                                 </TouchableOpacity>
                             </View>
                         )
