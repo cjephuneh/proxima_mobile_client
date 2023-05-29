@@ -327,16 +327,7 @@ export const SetProfile = () => {
         const day = String(selectedDate.getDate()).padStart(2, '0');
         setUserDate(`${year}-${month}-${day}`)
     };
-
-    // const onChange = (event, selectedDate) => {
-    //     const dt = JSON.stringify(selectedDate)
-    //     const currentDate = selectedDate;
-    //     setDOB(JSON.stringify(selectedDate).split('T')[0])
-    //     console.log('dob')
-    //     setShow(false);
-    //     setDate(currentDate);
-    //   };
-
+    
     const profileValidationSchema = yup.object().shape({
         username: yup
             .string()
@@ -534,9 +525,6 @@ export const SetProfile = () => {
                                                 readOnly={true}
                                                 value={userDate}
                                             />
-                                            {/* <TouchableOpacity activeOpacity={.9} onPress={() => setShow(!show)}>
-                                                <Feather name="calendar" size={24} color="black" />
-                                            </TouchableOpacity> */}
                                             {errors.dateOfBirth && touched.dateOfBirth && <Text testID='dateOfBirth-validation-text' className='mt-2 ml-2 text-sm text-red-600'>{errors.dateOfBirth}</Text>}
                                         </View>
 
@@ -565,21 +553,6 @@ export const SetProfile = () => {
                         )
                     }
                 </Formik>
-                
-
-                {/* <View>
-                    <Text>Your Bio(optional)</Text>
-                    <TextInput
-                        multiline={true}
-                        numberOfLines={5}
-                        className='mt-2 border border-gray-300 px-4 py-2 rounded-lg'
-                        placeholder='A brief description about you'
-                        value={bio}
-                        onChangeText={text => setBio(text)}
-                        textAlignVertical='top'
-                        testID='bio-input'
-                    />
-                </View> */}
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
