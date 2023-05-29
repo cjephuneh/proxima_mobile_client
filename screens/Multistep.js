@@ -313,8 +313,20 @@ export const SetProfile = () => {
 
 
     // date picker
-    // const [date, setDate] = useState(new Date());
-    // const [show, setShow] = useState(false);
+    const [date, setDate] = useState(new Date());
+    const [show, setShow] = useState(false)
+    const [userDate, setUserDate] = useState('YYYY-MM-DD')
+
+    const onChange = (event, selectedDate) => {
+        console.log(selectedDate)
+        setShow(false)
+        const currentDate = selectedDate;
+        setDate(currentDate);
+        const year = selectedDate.getFullYear();
+        const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const day = String(selectedDate.getDate()).padStart(2, '0');
+        setUserDate(`${year}-${month}-${day}`)
+    };
 
     // const onChange = (event, selectedDate) => {
     //     const dt = JSON.stringify(selectedDate)
@@ -499,24 +511,28 @@ export const SetProfile = () => {
                                     </View>
 
                                     <View className='flex-1'>
-                                        <Text>Date of Birth</Text>
-                                        {/* {show && (
-                                            <DateTimePicker
-                                            testID="dateTimePicker"
-                                            value={date}
-                                            mode={'date'}
-                                            is24Hour={true}
-                                            onChange={onChange}
-                                            />
-                                        )} */}
+                                        <View className='flex-row gap-2'>
+                                            <Text>Date of Birth</Text>
+                                            <TouchableOpacity onPress={() => setShow(true)}>
+                                                <Feather name="calendar" size={20} color="black" />
+                                            </TouchableOpacity>
+                                        </View>
+                                        {
+                                            show && (
+                                                <DateTimePicker
+                                                    testID="dateTimePicker"
+                                                    value={date}
+                                                    mode={'date'}
+                                                    is24Hour={true}
+                                                    onChange={onChange}
+                                                />
+                                            )
+                                        }
                                         <View className='flex-row flex-1 items-center border border-gray-300 mt-2 rounded-lg px-2 py-2 '>
-                                            <TextInput
-                                                className='flex-1'
-                                                placeholder='YYYY-MM-DD'
-                                                value={values.dateOfBirth}
-                                                onChangeText={handleChange('dateOfBirth')}
-                                                onBlur={handleBlur('dateOfBirth')}
-                                                testID='name-input'
+                                            <TextInput 
+                                                editable={false}
+                                                readOnly={true}
+                                                value={userDate}
                                             />
                                             {/* <TouchableOpacity activeOpacity={.9} onPress={() => setShow(!show)}>
                                                 <Feather name="calendar" size={24} color="black" />
