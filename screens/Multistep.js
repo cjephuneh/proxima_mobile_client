@@ -1,10 +1,10 @@
 import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Touchable, KeyboardAvoidingView, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 const Stack = createNativeStackNavigator();
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { register, setAuthCode, setGoal, setUserConfirmPassword, setUserEmail, setUserPassword, setUserProfile } from '../redux/slice/auth/authSlice';
+import { register, reset, setAuthCode, setGoal, setUserConfirmPassword, setUserEmail, setUserPassword, setUserProfile } from '../redux/slice/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup'
@@ -302,12 +302,7 @@ export const SetProfile = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
 
-    // const [username, setUsername] = useState(null)
-    // // const [bio, setBio] = useState(null)
-    // const [firstName, setFirstName] = useState('')
-    // const [DOB, setDOB] = useState('')
     const [selectedGender, setSelectedGender] = useState('');
-    const [userGender, setUserGender] = useState('')
 
     // dropdown
     const [genderOpen, setGenderOpen] = useState(false);
@@ -351,50 +346,56 @@ export const SetProfile = () => {
             .required()
     }) 
 
-    // retrieve data filled out in previous pages
-    const email = useSelector((state) => state.auth.email)
-    const password = useSelector((state) => state.auth.password)
-    const confirmPassword = useSelector((state) => state.auth.confirmPassword)
-    const isUserError = useSelector((state) => state.auth.isUserError)
-    const isUserSuccess = useSelector((state) => state.auth.isUserSuccess)
-    const isUserMessage = useSelector((state) => state.auth.isUserMessage)
-
-    console.log('error', isUserError)
-    console.log('success', isUserSuccess)
-    console.log('message', typeof(isUserMessage))
-
-    if(isUserMessage.email){
-        Alert.alert('User already exists', 
-            'It seems you already have a Proxima account. Please log in.',
-            [
-                { text: 'LOGIN', onPress: () => navigation.replace('login')},
-                { text: 'OK', style: 'cancel'}
-            ]
-        )
-    }
-
-    if(!isUserMessage.email && isUserMessage.username){
-        Alert.alert('Username already registered', 
-            'Please select another username'
-        )
-    }
+    const { email, password, confirmPassword, isUserError, isUserSuccess, isUserMessage } = useSelector((state) => state.auth)
     
     const submitProfile = (values) => {
-        dispatch(register({
-            username: values.username,
-            email,
-            first_name: values.firstName,
-            last_name: values.lastName,
-            gender: selectedGender,
-            phonenumber: values.phoneNumber,
-            DOB: values.dateOfBirth,
-            password,
-            confirm_password: confirmPassword,
-            user_type: 'client'
-        }))
-        
-        // navigation.navigate('setPassword')
+
+        const resetErrorInStore = (dispatch, action) => new Promise((resolve, reject) => {
+            dispatch(action())
+            resolve();
+        })
+
+        resetErrorInStore(dispatch, reset).then(() => {
+            dispatch(register({
+                username: values.username,
+                email,
+                first_name: values.firstName,
+                last_name: values.lastName,
+                gender: selectedGender,
+                phonenumber: values.phoneNumber,
+                DOB: values.dateOfBirth,
+                password,
+                confirm_password: confirmPassword,
+                user_type: 'client'
+            }))
+        })
     }
+
+    useEffect(() => {
+        if(isUserError){
+            if(isUserMessage === 'Username already taken'){
+                Alert.alert('Username already registered', 
+                    'Please select another username'
+                )
+            }
+    
+            if(isUserMessage === 'Email already registered'){
+                Alert.alert('User already exists', 
+                    'It seems you already have a Proxima account. Please log in.',
+                    [
+                        { text: 'LOGIN', onPress: () => navigation.replace('login')},
+                        { text: 'OK', style: 'cancel'}
+                    ]
+                )
+            }
+    
+            if(isUserMessage === 'An error occurred. Please try again later'){
+                Alert.alert('Error :(',
+                'An error occurred. Please make sure the form is fully filled out or try again later'
+                )
+            }
+        }
+    }, [isUserError, isUserMessage])
     return (
         <SafeAreaView className='flex-1 pt-8 px-2 bg-white'>
             <KeyboardAvoidingView behavior='position' className='mt-2 space-y-3'>

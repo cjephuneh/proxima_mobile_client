@@ -19,22 +19,13 @@ const Login = ({ navigation }) => {
       .required('Required')
   }) 
 
-  const user = useSelector((state) => state.auth.user)
+  // const user = useSelector((state) => state.auth.user)
 
   const handleLogin = (values) => {
-    // console.log(values)
     // dispatch(login()) // for testing purposes only. to be removed and activate signin
     dispatch(signin({email: values.email, password: values.password}))
-    // navigation.replace('drawer')
   }
 
-  useEffect(() => {
-    if(user){
-      navigation.replace('drawer')
-    } else {
-      return
-    }
-  }, [user, navigation])
   return (
     <SafeAreaView className='bg-white flex-1 px-4'>
       <View className='pt-8 flex-row items-center'>

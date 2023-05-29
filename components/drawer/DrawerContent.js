@@ -16,10 +16,10 @@ const DrawerContent = (props) => {
     // current closing drawer and redirecting to login manually
     // TODO: Try and find a fix to force the MainStackNav to rerender on user state change
     const handleLogout = async () => {
-        dispatch(logout())
-        props.navigation.closeDrawer()
         await removeInfo()
-        navigation.replace('login')
+        dispatch(logout())
+        // props.navigation.closeDrawer()
+        // navigation.replace('login')
     }
 
     // remove user info from local storage

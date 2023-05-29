@@ -76,13 +76,20 @@ export const verifyAuthCode = createAsyncThunk('auth/verifycode', async (userEma
 // allow users to register
 export const register = createAsyncThunk('auth/register', async (registerData, thunkAPI) => {
     try {
-                console.log(registerData)
+        const response = await authService.registerUser(registerData)
 
-        return await authService.registerUser(registerData)
-    } catch(error) {
-        console.error(error)
-        const message = error
-        return thunkAPI.rejectWithValue(message)
+        if(response.error){
+            console.log('slice', response)
+            return thunkAPI.rejectWithValue(response.error)
+        }
+        
+        return response
+    } catch (error) {
+        console.error(error);
+        const message = error.message;
+        // Handle other errors as needed
+        // ...
+        return thunkAPI.rejectWithValue(message);
     }
 })
 
@@ -122,6 +129,10 @@ export const authSlice = createSlice({
             state.gender = action.payload.gender,
             state.dateOfBirth = action.payload.dateOfBirth,
             state.phoneNumber = action.payload.phoneNumber
+        },
+        // reset the state of error value
+        reset: (state) => {
+            state.isUserMessage = ''
         }
     },
     extraReducers: (builder) =>
@@ -187,6 +198,6 @@ export const authSlice = createSlice({
             })
 })
 
-export const { login, logout, setGoal, setUserEmail, setAuthCode, setUserPassword, setUserConfirmPassword, setUserProfile } = authSlice.actions 
+export const { login, logout, setGoal, setUserEmail, setAuthCode, setUserPassword, setUserConfirmPassword, setUserProfile, reset } = authSlice.actions 
 
 export default authSlice.reducer

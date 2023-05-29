@@ -11,18 +11,21 @@ const Stack = createNativeStackNavigator();
 const MainStackNav = () => {
   const user = useSelector((state) => state.auth.user);
 
-  console.log('user ', user);
+  console.log('user main stack nav: ', user);
+  console.log('main stack nav: ', typeof(user))
   
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user && !user.error ? (
-        <Stack.Screen name='drawer' component={DrawerNav} />
-      ) : (
+      {!user ? (
         <>
           <Stack.Screen name='login' component={Login} />
           <Stack.Screen name='multistep' component={Multistep} />
-          <Stack.Screen name='drawer' component={DrawerNav} />
+          {/* <Stack.Screen name='drawer' component={DrawerNav} /> */}
         </>
+      ) : (
+
+         <Stack.Screen name='drawer' component={DrawerNav} />
+
       )}
     </Stack.Navigator>
   );
