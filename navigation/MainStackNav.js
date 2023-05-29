@@ -23,9 +23,7 @@ const MainStackNav = () => {
           {/* <Stack.Screen name='drawer' component={DrawerNav} /> */}
         </>
       ) : (
-
          <Stack.Screen name='drawer' component={DrawerNav} />
-
       )}
     </Stack.Navigator>
   );

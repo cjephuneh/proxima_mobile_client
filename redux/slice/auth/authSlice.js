@@ -1,5 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import authService from './authService'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Async thunk for initializing the user value
+export const initializeUser = createAsyncThunk('auth/initializeUser', async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      return value !== null ? JSON.parse(value) : null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+});
 
 const initialState = {
     // to hold all the user details
@@ -137,6 +149,11 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) =>
         builder
+            // handle user retrieval
+            .addCase(initializeUser.fulfilled, (state, action) => {
+                state.user = action.payload;
+            })
+
             .addCase(signin.pending, (state) => {
                 state.isUserLoading = true
             })
