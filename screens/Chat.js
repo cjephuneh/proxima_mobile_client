@@ -1,11 +1,28 @@
 import { View, Text, SafeAreaView, KeyboardAvoidingView, ScrollView, TextInput, TouchableOpacity, Keyboard } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Audio } from 'expo-av';
+import { useDispatch, useSelector } from 'react-redux';
+import { retrieveMessages, sendMessage } from '../redux/slice/chat/chatSlice';
 
 const Chat = () => {
     const navigation = useNavigation()
+    const route = useRoute()
+    const dispatch = useDispatch()
+
+    // retrieve chat_id from route
+    const { chat_id } = route.params
+
+    // retrieve messages
+    useEffect(() => {
+      dispatch(retrieveMessages({chat_id}))
+    }, [])
+
+    // retrieve data from store
+    const { chatMessages, isChatMessagesLoading, isChatMessagesSuccess } = useSelector((state) => state.chat)
+
+    console.log(chatMessages)
 
     const [message, setMessage] = useState(null)
     const [recording, setRecording] = useState();
@@ -50,14 +67,28 @@ const Chat = () => {
 
     const [messages, setMessages] = useState(msgs)
 
-    const sendMessage = () => {
-        let trimmedMessage = message.trim()
-        setMessages([...messages, {
-            message: trimmedMessage,
-            sender: 'Me',
-            typing: false
-        }])
-        setMessage(null)
+    // send a message
+    const sendClientMessage = () => {
+      let trimmedMessage = message.trim()
+      // setMessages([...messages, {
+      //     message: trimmedMessage,
+      //     sender: 'Me',
+      //     typing: false
+      // }])
+      // setMessage(null)
+      if(trimmedMessage.length === 0) return
+
+      dispatch(sendMessage({
+        chat_id,
+        text_content: trimmedMessage,
+        voice_content: "",
+        message_sender: 'client',
+        escalated: "",
+        channel: "Mobile",
+        topic: ""
+      }))
+
+      setMessage(null)
     }
 
     async function startRecording(){
@@ -184,13 +215,20 @@ const Chat = () => {
         >
 
             {
-                messages.map((message, index) => (
+              isChatMessagesLoading ? <Text>Loading messages...</Text> :
+              
+              (
+                isChatMessagesSuccess && chatMessages &&
+
+                // reversed messages array to sort the messages
+                [...chatMessages].reverse().map((message, index) => (
                     <Text key={index} 
-                        className={message.sender === 'Me' ? 'bg-[#2DABB1] px-4 py-2 rounded text-white w-fit self-end' : 'bg-gray-300 px-4 py-2 rounded text-black w-fit self-start'}
+                        className={message.message_sender === 'client' ? 'bg-[#2DABB1] px-4 py-2 rounded text-white w-fit self-end' : 'bg-gray-300 px-4 py-2 rounded text-black w-fit self-start'}
                     >
-                        {message.message ? message.message : 'Typing...'}
+                        {message.text_content}
                     </Text>
                 ))
+              )
             }
         
         </ScrollView>
@@ -213,7 +251,7 @@ const Chat = () => {
                     <FontAwesome name="microphone" size={24} color="#2DABB1" />
                 </TouchableOpacity>
            </View>
-           <TouchableOpacity testID='send-btn' activeOpacity={0.9} disabled={!message} onPress={() => sendMessage()} className='px-2 py-1 mb-2'>
+           <TouchableOpacity testID='send-btn' activeOpacity={0.9} disabled={!message} onPress={() => sendClientMessage()} className='px-2 py-1 mb-2'>
                 <FontAwesome name="send" size={24} color="#2DABB1" />
            </TouchableOpacity>
         </View> :

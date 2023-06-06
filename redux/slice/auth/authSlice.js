@@ -54,12 +54,19 @@ const initialState = {
 // allow all users to sign in
 export const signin = createAsyncThunk('auth/signin', async (loginData, thunkAPI) => {
     try {
-        return await authService.signinUser(loginData)
-        // console.log(user)
+        const response = await authService.signinUser(loginData)
+
+        if(response.error){
+            return thunkAPI.rejectWithValue(response.error)
+        }
+        
+        return response
     } catch(error) {
-        console.error(error)
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
-        return thunkAPI.rejectWithValue(message)
+        // console.error(error);
+        const message = error.message;
+        // Handle other errors as needed
+        // ...
+        return thunkAPI.rejectWithValue(message);
     }
 })
 
@@ -91,7 +98,6 @@ export const register = createAsyncThunk('auth/register', async (registerData, t
         const response = await authService.registerUser(registerData)
 
         if(response.error){
-            console.log('slice', response)
             return thunkAPI.rejectWithValue(response.error)
         }
         

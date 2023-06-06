@@ -318,7 +318,6 @@ export const SetProfile = () => {
     const [userDate, setUserDate] = useState('YYYY-MM-DD')
 
     const onChange = (event, selectedDate) => {
-        console.log(selectedDate)
         setShow(false)
         const currentDate = selectedDate;
         setDate(currentDate);

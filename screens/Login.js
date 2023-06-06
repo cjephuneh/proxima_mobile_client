@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, TextInput, Touchable } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, TextInput, Touchable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import * as yup from 'yup'
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
 
-  const { isUserLoading } = useSelector((state) => state.auth)
+  const { isUserLoading, isUserError, isUserMessage } = useSelector((state) => state.auth)
 
   const loginValidationSchema = yup.object().shape({
     email: yup
@@ -21,12 +21,21 @@ const Login = ({ navigation }) => {
       .required('Required')
   }) 
 
-  // const user = useSelector((state) => state.auth.user)
-
   const handleLogin = (values) => {
     // dispatch(login()) // for testing purposes only. to be removed and activate signin
     dispatch(signin({email: values.email, password: values.password}))
   }
+
+  // display appropriate error messages
+  useEffect(() => {
+    if(isUserError){
+      if(isUserMessage === 'Incorrect credentials' && isUserLoading === false){
+        Alert.alert('Incorrect credentials',
+          'Please use the correct credentials or create an account'
+        )
+      }
+    }
+  }, [isUserError, isUserMessage, isUserLoading])
 
   return (
     <SafeAreaView className='bg-white flex-1 px-4'>

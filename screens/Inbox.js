@@ -41,7 +41,7 @@ const Inbox = () => {
       }
     ]
 
-    const [chats, setChats] = useState(data)
+    const [chatss, setChats] = useState(data)
     const [searchChat, setSearchChat] = useState('')
 
     const searchFilterFunction = (text) => {
@@ -59,13 +59,12 @@ const Inbox = () => {
       setSearchChat(text)
     }
 
+    // fetch all chats on initial page load
     const fetchChats = async () => {
-      return dispatch(retrieveChats())
+      return dispatch(retrieveChats({chat_owner: 2}))
     }
 
-    const fetchedChats = useSelector((state) => state.chat.chats)
-
-    console.log('ffff', fetchedChats)
+    const { chats, isChatsLoading, isChatsSuccess } = useSelector((state) => state.chat)
 
     useEffect(() => {
       fetchChats()
@@ -97,56 +96,35 @@ const Inbox = () => {
 
       <ScrollView className='space-y-3' showsVerticalScrollIndicator={false}>
         <View className='space-y-3'>
-          <Text className='mt-4 mb-2 font-bold text-lg'>
+          {/* <Text className='mt-4 mb-2 font-bold text-lg'>
             Unread - 
           <Text testID='unread-chats-count'>{data.filter(dt => dt.read === false).length}</Text>
-          </Text>
-          <View testID='unread-chats' className='space-y-3'>
+          </Text> */}
+          <View testID='unread-chats' className='space-y-3 mt-3'>
           {
-              chats.filter(chat => chat.read === false).map((message, i) => (
+            isChatsLoading ? <Text>Chats loading...</Text> :
+
+            ( isChatsSuccess && chats &&
+              chats.map((chat) => (
                   <TouchableOpacity
-                      onPress={() => navigation.navigate('chat')} 
-                      key={i}
+                      onPress={() => navigation.navigate('chat', { chat_id: chat.chat_id })} 
+                      key={chat.chat_id}
                       className='flex-row space-x-2 items-center'
                       testID='open-chat'
                   >
                       {/* <Image source={require('../assets/user.png')} /> */}
                       <Octicons name="organization" size={24} color="black" />
                       <View className='flex-1'>
-                          <Text className='font-semibold'>{message.companyName}</Text>
+                          <Text className='font-semibold'>{chat.tenant_id.tenant_name}</Text>
                           {/* <Text className='font-bold'>{message.subject}</Text> */}
-                          <Text>{message.message.length > 30 ? message.message.slice(0, 30)+'...' : message.message}</Text>
+                          {/* <Text>{message.message.length > 30 ? message.message.slice(0, 30)+'...' : message.message}</Text> */}
                       </View>
-                      <Text>{message.time}</Text>
+                      {/* <Text>{message.time}</Text> */}
                   </TouchableOpacity>
               ))
+            )
           }
           </View>
-        </View>
-
-        <View  className='space-y-3'>
-        <Text className='mt-4 mb-2 font-bold text-lg'>
-        Others
-      </Text>
-      {
-            chats.filter(chat => chat.read === true).map((message, i) => (
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('chat')} 
-                    key={i}
-                    className='flex-row space-x-2 items-center'
-                    testID='open-chat'
-                >
-                    {/* <Image source={require('../assets/user.png')} /> */}
-                    <Octicons name="organization" size={24} color="black" />
-                    <View className='flex-1'>
-                        <Text className='font-semibold'>{message.companyName}</Text>
-                        {/* <Text className='font-bold'>{message.subject}</Text> */}
-                        <Text>{message.message.length > 30 ? message.message.slice(0, 30)+'...' : message.message}</Text>
-                    </View>
-                    <Text>{message.time}</Text>
-                </TouchableOpacity>
-            ))
-        }
         </View>
       </ScrollView>
 

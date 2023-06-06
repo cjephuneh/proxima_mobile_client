@@ -45,7 +45,7 @@ const DrawerContent = (props) => {
     const setUserInfo = async () => {
       let userInfo = await getInfo()
       setUser(userInfo)
-      console.log('user info ', userInfo)
+      // console.log('user info ', userInfo)
     }
 
     // run the setUserinfo function once on page load

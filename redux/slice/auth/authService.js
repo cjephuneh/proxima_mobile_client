@@ -3,24 +3,25 @@ import { ApiUrls } from "../../../utils/ApiUrls";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const signinUser = async (userData) => {
-    const { data } = await axios.post(ApiUrls.LOGIN_ENDPOINT, userData)
+    try {
+      const { data } = await axios.post(ApiUrls.LOGIN_ENDPOINT, userData)
 
-    if(data.token){
-        const storeUserInfo = async () => {
-            try {
-                await AsyncStorage.setItem('user', JSON.stringify(data))
-            } catch (error) {
-                console.log('error storing the value')
-            }
-        }
-    
-        await storeUserInfo()
+      if(data.token){
+          const storeUserInfo = async () => {
+              try {
+                  await AsyncStorage.setItem('user', JSON.stringify(data))
+              } catch (error) {
+                  console.log('error storing the value')
+              }
+          }
+      
+          await storeUserInfo()
 
-        return data
-    } else {
-        return Promise.reject({
-            message: 'Incorrect user credentials'
-        })
+          return data
+      } else return { error: 'Incorrect credentials'}
+
+    } catch (error) {
+      throw error
     }
 }
 

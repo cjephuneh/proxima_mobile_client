@@ -1,26 +1,33 @@
 import axios from "axios";
 import { ApiUrls } from "../../../utils/ApiUrls";
 
-const sendMessage = async () => {
-    const response = await axios.post('/', messageData)
+const sendMessage = async (messageData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.retrieve_messages, messageData)
 
-    return response.data
+        return data
+    } catch (error) {
+        throw error
+    }
 }
 
-const retrieveMessages = async () => {
-    const { data } = await axios.post('/', messagesData)
-
-    if(data){
+const retrieveMessages = async (messagesData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.retrieve_messages, messagesData)
         return data
-    } else {
-        return Promise.reject(data.errors)
+    } catch (error) {
+        throw error
     }
 }
 
 const retrieveChats = async (userData) => {
-    const response = await axios.get(`${ApiUrls.retrieve_chats}?chat_owner=${userData.client_id}`)
+    try {
+        const { data } = await axios.get(`${ApiUrls.retrieve_chats}?chat_owner=${userData.chat_owner}`)
 
-    return response.data
+        return data
+    } catch (error) {
+        throw error
+    }
 }
 
 const chatService = {
