@@ -108,9 +108,9 @@ export const getCommunityIssues = createAsyncThunk('community/getCommunityIssues
 })
 
 // retrieve community issues
-export const raiseIssue = createAsyncThunk('community/raiseIssue', async (communityData, thunkAPI) => {
+export const raiseIssue = createAsyncThunk('community/raiseIssue', async (issueData, thunkAPI) => {
     try {
-        return await communityService.raiseIssue(communityData)
+        return await communityService.raiseIssue(issueData)
     } catch(error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -188,6 +188,10 @@ const communitySlice = createSlice({
     reducers: {
         resetThreadComments: (state) => {
             state.threadcomments = null
+        },
+        resetIssueStatus: (state) => {
+            state.isRaiseIssueSuccess = false;
+            state.isRaiseIssueError = false;
         }
     }, 
     extraReducers: (builder) => 
@@ -343,6 +347,6 @@ const communitySlice = createSlice({
             })
 })
 
-export const { resetThreadComments } = communitySlice.actions
+export const { resetThreadComments, resetIssueStatus } = communitySlice.actions
 
 export default communitySlice.reducer

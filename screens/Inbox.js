@@ -61,10 +61,11 @@ const Inbox = () => {
 
     // fetch all chats on initial page load
     const fetchChats = async () => {
-      return dispatch(retrieveChats({chat_owner: 2}))
+      return dispatch(retrieveChats({chat_owner: 1}))
     }
 
     const { chats, isChatsLoading, isChatsSuccess } = useSelector((state) => state.chat)
+    console.log(chats, isChatsSuccess)
 
     useEffect(() => {
       fetchChats()

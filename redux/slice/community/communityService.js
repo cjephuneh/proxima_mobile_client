@@ -77,10 +77,14 @@ const getThreadComments = async (threadData) => {
     }
 }
 
-const raiseIssue = async (communityData) => {
-    const response = await axios.post('/', communityData)
+const raiseIssue = async (issueData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.raise_issue, issueData)
 
-    return response.data
+        return data
+    } catch (error) {
+        throw error
+    }
 }
 
 const commentOnIssue = async (commentData) => {
