@@ -22,7 +22,7 @@ const retrieveMessages = async (messagesData) => {
 
 const retrieveChats = async (userData) => {
     try {
-        const { data } = await axios.get(`${ApiUrls.retrieve_chats}?chat_owner=${userData.chat_owner}`)
+        const { data } = await axios.post(ApiUrls.retrieve_chats, userData)
 
         return data
     } catch (error) {
