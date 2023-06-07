@@ -1,50 +1,47 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
-import React, { useState } from 'react'
-import { EvilIcons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react'
+import { EvilIcons, Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { retrieveChats } from '../redux/slice/chat/chatSlice';
 
 const Inbox = () => {
+  const dispatch = useDispatch()
   const navigation = useNavigation()
     let data = [
       {
-        name: 'John Doe',
-        subject: 'Hi there!',
-        message: 'How are you?',
-        read: false
+        companyName: "Company A",
+        message: "I'm experiencing some issues with the product I purchased. Can you help?",
+        read: true,
+        time: '12:08PM'
       },
       {
-        name: 'Jane Doe',
-        subject: 'Hi there!',
-        message: 'How are you?',
-        read: false
+        companyName: "Company B",
+        message: "The product I received is defective. What should I do?",
+        read: false,
+        time: '05:30AM'
       },
       {
-        name: 'John Smith',
-        subject: 'Hi there!',
-        message: 'How are you?',
-        read: true
+        companyName: "Company C",
+        message: "I have some questions about the warranty for the product.",
+        read: true,
+        time: '11:30PM'
       },
       {
-        name: 'John John',
-        subject: 'Hi there!',
-        message: 'How are you?',
-        read: true
+        companyName: "Company D",
+        message: "The product is not functioning as expected. Please assist.",
+        read: false,
+        time: '12:05PM'
       },
       {
-        name: 'John Dan',
-        subject: 'Hi there!',
-        message: 'How are you?',
-        read: true
-      },
-      {
-        name: 'John Jade',
-        subject: 'Hi there!',
-        message: 'How are you?',
-        read: true
+        companyName: "Company E",
+        message: "There was a mistake in my order. I received the wrong product.",
+        read: true,
+        time: '09:30AM'
       }
     ]
 
-    const [chats, setChats] = useState(data)
+    const [chatss, setChats] = useState(data)
     const [searchChat, setSearchChat] = useState('')
 
     const searchFilterFunction = (text) => {
@@ -61,6 +58,17 @@ const Inbox = () => {
       setChats(newData)
       setSearchChat(text)
     }
+
+    // fetch all chats on initial page load
+    const fetchChats = async () => {
+      return dispatch(retrieveChats({chat_owner: 2}))
+    }
+
+    const { chats, isChatsLoading, isChatsSuccess } = useSelector((state) => state.chat)
+
+    useEffect(() => {
+      fetchChats()
+    }, [])
   return (
     <SafeAreaView className='pt-8 flex-1 bg-white px-3'>
       <View className='flex-row space-x-3'>
@@ -88,54 +96,35 @@ const Inbox = () => {
 
       <ScrollView className='space-y-3' showsVerticalScrollIndicator={false}>
         <View className='space-y-3'>
-          <Text className='mt-4 mb-2 font-bold text-lg'>
+          {/* <Text className='mt-4 mb-2 font-bold text-lg'>
             Unread - 
           <Text testID='unread-chats-count'>{data.filter(dt => dt.read === false).length}</Text>
-          </Text>
-          <View testID='unread-chats' className='space-y-3'>
+          </Text> */}
+          <View testID='unread-chats' className='space-y-3 mt-3'>
           {
-              chats.filter(chat => chat.read === false).map((message, i) => (
+            isChatsLoading ? <Text>Chats loading...</Text> :
+
+            ( isChatsSuccess && chats &&
+              chats.map((chat) => (
                   <TouchableOpacity
-                      onPress={() => navigation.navigate('chat')} 
-                      key={i}
-                      className='flex-row space-x-2'
+                      onPress={() => navigation.navigate('chat', { chat_id: chat.chat_id })} 
+                      key={chat.chat_id}
+                      className='flex-row space-x-2 items-center'
                       testID='open-chat'
                   >
-                      <Image source={require('../assets/user.png')} />
+                      {/* <Image source={require('../assets/user.png')} /> */}
+                      <Octicons name="organization" size={24} color="black" />
                       <View className='flex-1'>
-                          <Text>{message.name}</Text>
-                          <Text className='font-bold'>{message.subject}</Text>
-                          <Text>{message.message}</Text>
+                          <Text className='font-semibold'>{chat.tenant_id.tenant_name}</Text>
+                          {/* <Text className='font-bold'>{message.subject}</Text> */}
+                          {/* <Text>{message.message.length > 30 ? message.message.slice(0, 30)+'...' : message.message}</Text> */}
                       </View>
-                      <Text>9:36 AM</Text>
+                      {/* <Text>{message.time}</Text> */}
                   </TouchableOpacity>
               ))
+            )
           }
           </View>
-        </View>
-
-        <View  className='space-y-3'>
-        <Text className='mt-4 mb-2 font-bold text-lg'>
-        Others
-      </Text>
-      {
-            chats.filter(chat => chat.read === true).map((message, i) => (
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('chat')} 
-                    key={i}
-                    className='flex-row space-x-2'
-                    testID='open-chat'
-                >
-                    <Image source={require('../assets/user.png')} />
-                    <View className='flex-1'>
-                        <Text>{message.name}</Text>
-                        <Text className='font-bold'>{message.subject}</Text>
-                        <Text>{message.message}</Text>
-                    </View>
-                    <Text>9:36 AM</Text>
-                </TouchableOpacity>
-            ))
-        }
         </View>
       </ScrollView>
 

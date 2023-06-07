@@ -1,13 +1,15 @@
-import { View, Text, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, TextInput, Touchable } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, TextInput, Touchable, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login, signin } from '../redux/slice/auth/authSlice'
 import { Formik } from 'formik';
 import * as yup from 'yup'
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
+
+  const { isUserLoading, isUserError, isUserMessage } = useSelector((state) => state.auth)
 
   const loginValidationSchema = yup.object().shape({
     email: yup
@@ -20,15 +22,25 @@ const Login = ({ navigation }) => {
   }) 
 
   const handleLogin = (values) => {
-    console.log(values)
-    dispatch(login()) // for testing purposes only. to be removed and activate signin
-    // dispatch(signin({values.email, values.password}))
-    navigation.replace('drawer')
+    // dispatch(login()) // for testing purposes only. to be removed and activate signin
+    dispatch(signin({email: values.email, password: values.password}))
   }
+
+  // display appropriate error messages
+  useEffect(() => {
+    if(isUserError){
+      if(isUserMessage === 'Incorrect credentials' && isUserLoading === false){
+        Alert.alert('Incorrect credentials',
+          'Please use the correct credentials or create an account'
+        )
+      }
+    }
+  }, [isUserError, isUserMessage, isUserLoading])
+
   return (
     <SafeAreaView className='bg-white flex-1 px-4'>
       <View className='pt-8 flex-row items-center'>
-        <TouchableOpacity activeoPacity={0.2} onPress={() => navigation.navigate('onBoarding')} testID='back-button'>
+        <TouchableOpacity activeOpacity={0.2} onPress={() => navigation.navigate('onBoarding')} testID='back-button'>
         <Ionicons name="chevron-back" size={28} color="black" />
         </TouchableOpacity>
         <View className=' -mx-6 w-full'>
@@ -39,7 +51,7 @@ const Login = ({ navigation }) => {
       <KeyboardAvoidingView behavior='padding' className='justify-between py-8'>
         <Formik
           validationSchema={loginValidationSchema}
-          initialValues={{email: '', password: ''}}
+          initialValues={{email: 'k@e.com', password: '12345678'}}
           onSubmit={handleLogin}
         >
           {
@@ -90,13 +102,13 @@ const Login = ({ navigation }) => {
                     </Text>
 
                     <TouchableOpacity 
-                      disabled={!isValid}
+                      disabled={isValid && isUserLoading}
                       onPress={handleSubmit} 
                       activeOpacity={0.9} 
                       className='bg-[#2DABB1] mt-8 px-6 py-3 w-full rounded-full'
                       testID='login-button'
                     >
-                      <Text className='text-white text-center text-xl font-semibold'>Log in</Text>
+                      <Text className='text-white text-center text-xl font-semibold'>{isUserLoading ? 'Please wait...' : 'Log in'}</Text>
                     </TouchableOpacity>
                 </View>
               </View>

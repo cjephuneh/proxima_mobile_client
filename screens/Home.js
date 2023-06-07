@@ -6,30 +6,30 @@ import { useNavigation } from '@react-navigation/native'
 const Home = () => {
     const navigation = useNavigation()
     const data = [
-        {
-            title: '18th Street Brewery',
-            location: 'Dakley Avenue, Hammond, IN'
-        },
-        {
-            title: '16th Street',
-            location: 'Brooklyn, NY'
-        },
-        {
-            title: '169th Street',
-            location: 'Brooklyn, NY'
-        },
-        {
-            title: '18th Street Brewery',
-            location: 'Dakley Avenue, Hammond, IN'
-        },
-        {
-            title: '16th Street',
-            location: 'Brooklyn, NY'
-        },
-        {
-            title: '169th Street',
-            location: 'Brooklyn, NY'
-        },
+        // {
+        //     title: '18th Street Brewery',
+        //     location: 'Dakley Avenue, Hammond, IN'
+        // },
+        // {
+        //     title: '16th Street',
+        //     location: 'Brooklyn, NY'
+        // },
+        // {
+        //     title: '169th Street',
+        //     location: 'Brooklyn, NY'
+        // },
+        // {
+        //     title: '18th Street Brewery',
+        //     location: 'Dakley Avenue, Hammond, IN'
+        // },
+        // {
+        //     title: '16th Street',
+        //     location: 'Brooklyn, NY'
+        // },
+        // {
+        //     title: '169th Street',
+        //     location: 'Brooklyn, NY'
+        // },
         
     ]
 
@@ -126,7 +126,7 @@ const Home = () => {
                 </TouchableOpacity>
             )) :
 
-            <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>Sorry, this company does not exist in our database.</Text>
+            <Text className='text-sm text-center bg-gray-300 p-2 rounded font-semibold italic'>No recent chats</Text>
         }
 
       </ScrollView>

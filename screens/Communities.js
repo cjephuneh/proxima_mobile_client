@@ -1,54 +1,51 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { EvilIcons, MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { getCommunities } from '../redux/slice/community/communitySlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Communities = () => {
     const navigation = useNavigation()
-    const data = [
-        {
-            title: 'Delmonte',
-            location: 'Thika, Kenya'
-        },
-        {
-            title: 'Safaricom PLC',
-            location: 'Nairobi, Kenya'
-        },
-        {
-            title: 'Thika Motor Dealers',
-            location: 'Thika, Kenya'
-        },
-        {
-            title: 'Hava Cabs',
-            location: 'Westlands, Kenya'
-        },
-        {
-            title: 'JKUAT',
-            location: 'Juja, Kenya'
-        },
-        {
-            title: 'KCB Group',
-            location: 'Nairobi, Kenya'
-        },
-        
-    ]
+    const dispatch = useDispatch()
 
-    const [communities, setCommunities] = useState(data)
+    const { communities, isCommunitiesLoading, isCommunitiesSuccess } = useSelector((state) => state.community)
+
+    const [availableCommunities, setCommunities] = useState([])
     const [searchWord, setSearchWord] = useState('')
 
+    // enable user to search through the list of available communities
     const searchFilterFunction = (text) => {
-        if(!text) setSearchWord(text);
+        if (!text) {
+            setSearchWord(text);
+            setCommunities(communities); // Reset to original communities when the search field is empty
+            return;
+        }
+    
+        const newData = availableCommunities.filter((item) => {
+            const itemData = item.tenant_id.tenant_name ? item.tenant_id.tenant_name.toLowerCase() : '';
+            const searchData = text.toLowerCase();
+    
+            return itemData.indexOf(searchData) > -1;
+        });
+    
+        setCommunities(newData);
+        setSearchWord(text);
+    };
+    
 
-        const newData = data.filter(item => {
-           const itemData = item.title ? item.title.toLowerCase() : ''.toLowerCase
-           const searchData = text.toLowerCase()
+    useEffect(() => {
+        // fetch Communities
+        dispatch(getCommunities())
+    }, [])
 
-           return itemData.indexOf(searchData) > -1
-        })
+    // update communities state
+    useEffect(() => {
+        if(isCommunitiesSuccess && communities !== null){
+            setCommunities(communities)
+        }
+    }, [isCommunitiesSuccess, communities])
 
-        setCommunities(newData)
-        setSearchWord(text)
-    }
   return (
     <SafeAreaView className='flex-1 bg-white pt-8 px-3'>
         
@@ -71,30 +68,33 @@ const Communities = () => {
         </TouchableOpacity>
     </View>
       
-      <Text className='text-2xl font-bold mt-2'>Find a community</Text>
+        <Text className='text-2xl font-bold mt-2'>Find a community</Text>
+            <ScrollView className='mt-4 space-y-3'>
+            {   isCommunitiesLoading ?
+                <Text>Loading...</Text> : (
+                    availableCommunities.length > 0 ?
 
-      <ScrollView className='mt-4 space-y-3'>
-        {
-            communities.length > 0 ?
+                    availableCommunities.map((community,i) => (
+                        <TouchableOpacity testID='community-btn' key={i} onPress={() => navigation.navigate('community', {
+                            community_id: community.community_id
+                        })}>
+                            <View
+                                className='flex-row space-x-3 items-center'
+                            >
+                                <MaterialIcons name="groups" size={24} color="black" />
+                                <View>
+                                    <Text>{community.tenant_id.tenant_name}</Text>
+                                    <Text className='text-gray-500 text-sm'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    )) :
 
-            communities.map((community,i) => (
-                <TouchableOpacity testID='community-btn' key={i} onPress={() => navigation.navigate('community')}>
-                    <View
-                        className='flex-row space-x-3 items-center'
-                    >
-                        <MaterialIcons name="groups" size={24} color="black" />
-                        <View>
-                            <Text>{community.title}</Text>
-                            <Text className='text-gray-500 text-sm'>{community.location}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            )) :
+                    <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>No communities found.</Text>
+                )
+            }
 
-            <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>Sorry, this community does not exist in our database.</Text>
-        }
-
-      </ScrollView>
+            </ScrollView>
     </SafeAreaView>
   )
 }

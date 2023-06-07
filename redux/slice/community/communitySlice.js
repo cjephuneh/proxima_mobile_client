@@ -8,7 +8,10 @@ const initialState = {
     raiseIssue: null,
     commentOnIssue: null,
     likeIssue: null,
-    likeIssueComment: null,
+    userLikeIssueComment: null,
+    issuethread: null,
+    threadcomments: null,
+    communitysurveys: null,
 
     // communities
     isCommunitiesLoading: false,
@@ -27,6 +30,18 @@ const initialState = {
     isCommunityIssuesSuccess: false,
     isCommunityIssuesError: false,
     isCommunityIssuesMessage: '',
+
+    // thread
+    isIssueThreadLoading: false,
+    isIssueThreadSuccess: false,
+    isIssueThreadError: false,
+    isIssueThreadMessage: '',
+
+    // thread comments
+    isThreadCommentsLoading: false,
+    isThreadCommentsSuccess: false,
+    isThreadCommentsError: false,
+    isThreadCommentsMessage: '',
 
     // raise issue
     isRaiseIssueLoading: false,
@@ -51,12 +66,18 @@ const initialState = {
     isLikeIssueCommentSuccess: false,
     isLikeIssueCommentError: false,
     isLikeIssueCommentMessage: '',
+
+    // community surveys
+    isCommunitySurveysLoading: false,
+    isCommunitySurveysSuccess: false,
+    isCommunitySurveysError: false,
+    isCommunitySurveysMessage: false,
 }
 
 // retrieve all communities
-export const getCommunities = createAsyncThunk('community/getCommunities', async (communityData, thunkAPI) => {
+export const getCommunities = createAsyncThunk('community/getCommunities', async (thunkAPI) => {
     try {
-        return await communityService.getCommunities(communityData)
+        return await communityService.getCommunities()
     } catch(error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -98,11 +119,31 @@ export const raiseIssue = createAsyncThunk('community/raiseIssue', async (commun
 })
 
 // retrieve community issues
-export const commentOnIssue = createAsyncThunk('community/commentOnIssue', async (communityData, thunkAPI) => {
+export const commentOnIssue = createAsyncThunk('community/commentOnIssue', async (commentData, thunkAPI) => {
     try {
-        return await communityService.commentOnIssue(communityData)
+        return await communityService.commentOnIssue(commentData)
     } catch(error) {
         console.error(error)
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// retrieve issue threads
+export const getIssueThread = createAsyncThunk('community/thread', async (issueData, thunkAPI) => {
+    try {
+        return await communityService.getIssueThread(issueData)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// retrieve thread comments
+export const getThreadComments = createAsyncThunk('community/comments', async (threadData, thunkAPI) => {
+    try {
+        return await communityService.getThreadComments(threadData)
+    } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
@@ -120,10 +161,21 @@ export const likeIssue = createAsyncThunk('community/likeIssue', async (communit
 })
 
 // like community issues
-export const likeIssueComment = createAsyncThunk('community/likeIssueComment', async (communityData, thunkAPI) => {
+export const likeIssueComment = createAsyncThunk('community/likeIssueComment', async (commentData, thunkAPI) => {
     try {
-        return await communityService.likeIssueComment(communityData)
+        return await communityService.likeIssueComment(commentData)
     } catch(error) {
+        console.error(error)
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// retrieve community surveys
+export const retrieveCommunitySurveys = createAsyncThunk('community/survey', async (communityData, thunkAPI) => {
+    try {
+        return await communityService.retrieveCommunitySurveys(communityData)
+    } catch (error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -134,7 +186,9 @@ const communitySlice = createSlice({
     name: 'community',
     initialState,
     reducers: {
-
+        resetThreadComments: (state) => {
+            state.threadcomments = null
+        }
     }, 
     extraReducers: (builder) => 
         builder
@@ -181,6 +235,36 @@ const communitySlice = createSlice({
                 state.isCommunityIssuesError = true
                 state.isCommunityIssuesMessage = action.payload
                 state.community = null 
+            })
+
+            .addCase(getIssueThread.pending, (state) => {
+                state.isIssueThreadLoading = true
+            })
+            .addCase(getIssueThread.fulfilled, (state, action) => {
+                state.isIssueThreadLoading = false
+                state.isIssueThreadSuccess = true
+                state.issuethread = action.payload
+            })
+            .addCase(getIssueThread.rejected, (state, action) => {
+                state.isIssueThreadLoading = false
+                state.isIssueThreadError = true
+                state.isIssueThreadMessage = action.payload
+                state.issuethread = null 
+            })
+
+            .addCase(getThreadComments.pending, (state) => {
+                state.isThreadCommentsLoading = true
+            })
+            .addCase(getThreadComments.fulfilled, (state, action) => {
+                state.isThreadCommentsLoading = false
+                state.isThreadCommentsSuccess = true
+                state.threadcomments = action.payload
+            })
+            .addCase(getThreadComments.rejected, (state, action) => {
+                state.isThreadCommentsLoading = false
+                state.isThreadCommentsError = true
+                state.isThreadCommentsMessage = action.payload
+                state.threadcomments = null 
             })
 
             .addCase(raiseIssue.pending, (state) => {
@@ -234,14 +318,31 @@ const communitySlice = createSlice({
             .addCase(likeIssueComment.fulfilled, (state, action) => {
                 state.isLikeIssueCommentLoading = false
                 state.isLikeIssueCommentSuccess = true
-                state.likeIssueComment = action.payload
+                state.userLikeIssueComment = action.payload
             })
             .addCase(likeIssueComment.rejected, (state, action) => {
                 state.isLikeIssueCommentLoading = false
                 state.isLikeIssueCommentError = true
                 state.isLikeIssueCommentMessage = action.payload
-                state.likeIssueComment = null 
+                state.userLikeIssueComment = null 
+            })
+
+            .addCase(retrieveCommunitySurveys.pending, (state) => {
+                state.isCommunitySurveysLoading = true
+            })
+            .addCase(retrieveCommunitySurveys.fulfilled, (state, action) => {
+                state.isCommunitySurveysLoading = false,
+                state.isCommunitySurveysSuccess = true,
+                state.communitysurveys = action.payload
+            })
+            .addCase(retrieveCommunitySurveys.rejected, (state, action) => {
+                state.isCommunitySurveysLoading = false,
+                state.isCommunitySurveysError = true,
+                state.isCommunitySurveysMessage = action.payload,
+                state.communitysurveys = null
             })
 })
+
+export const { resetThreadComments } = communitySlice.actions
 
 export default communitySlice.reducer

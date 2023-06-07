@@ -1,5 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import authService from './authService'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Async thunk for initializing the user value
+export const initializeUser = createAsyncThunk('auth/initializeUser', async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      return value !== null ? JSON.parse(value) : null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+});
 
 const initialState = {
     // to hold all the user details
@@ -31,18 +43,30 @@ const initialState = {
     authCode: null,
     password: null,
     confirmPassword: null,
-    name: null,
-    bio: null
+    username: null,
+    firstName: null,
+    lastName: null,
+    gender: null,
+    dateOfBirth: null,
+    phoneNumber: null
 }
 
 // allow all users to sign in
-export const signin = createAsyncThunk('auth/signin', async (user, thunkAPI) => {
+export const signin = createAsyncThunk('auth/signin', async (loginData, thunkAPI) => {
     try {
-        return await authService.signinUser(user)
+        const response = await authService.signinUser(loginData)
+
+        if(response.error){
+            return thunkAPI.rejectWithValue(response.error)
+        }
+        
+        return response
     } catch(error) {
-        console.error(error)
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
-        return thunkAPI.rejectWithValue(message)
+        // console.error(error);
+        const message = error.message;
+        // Handle other errors as needed
+        // ...
+        return thunkAPI.rejectWithValue(message);
     }
 })
 
@@ -69,13 +93,21 @@ export const verifyAuthCode = createAsyncThunk('auth/verifycode', async (userEma
 })
 
 // allow users to register
-export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
+export const register = createAsyncThunk('auth/register', async (registerData, thunkAPI) => {
     try {
-        return await authService.registerUser(user)
-    } catch(error) {
-        console.error(error)
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
-        return thunkAPI.rejectWithValue(message)
+        const response = await authService.registerUser(registerData)
+
+        if(response.error){
+            return thunkAPI.rejectWithValue(response.error)
+        }
+        
+        return response
+    } catch (error) {
+        console.error(error);
+        const message = error.message;
+        // Handle other errors as needed
+        // ...
+        return thunkAPI.rejectWithValue(message);
     }
 })
 
@@ -109,11 +141,25 @@ export const authSlice = createSlice({
         },
         setUserProfile: (state, action) => {
             state.name = action.payload.name
-            state.bio = action.payload.bio
+            state.username = action.payload.username,
+            state.firstName = action.payload.firstName,
+            state.lastName = action.payload.lastName,
+            state.gender = action.payload.gender,
+            state.dateOfBirth = action.payload.dateOfBirth,
+            state.phoneNumber = action.payload.phoneNumber
+        },
+        // reset the state of error value
+        reset: (state) => {
+            state.isUserMessage = ''
         }
     },
     extraReducers: (builder) =>
         builder
+            // handle user retrieval
+            .addCase(initializeUser.fulfilled, (state, action) => {
+                state.user = action.payload;
+            })
+
             .addCase(signin.pending, (state) => {
                 state.isUserLoading = true
             })
@@ -175,6 +221,6 @@ export const authSlice = createSlice({
             })
 })
 
-export const { login, logout, setGoal, setUserEmail, setAuthCode, setUserPassword, setUserConfirmPassword, setUserProfile } = authSlice.actions 
+export const { login, logout, setGoal, setUserEmail, setAuthCode, setUserPassword, setUserConfirmPassword, setUserProfile, reset } = authSlice.actions 
 
 export default authSlice.reducer
