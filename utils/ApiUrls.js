@@ -23,6 +23,7 @@ export const ApiUrls =  {
     retrieve_thread_comments: COMMUNITY_ENDPOINT + '/comment/',
     like_issue_comment: COMMUNITY_ENDPOINT + '/likeordislikecomment/',
     raise_issue: COMMUNITY_ENDPOINT + '/issue/',
+    favorite_communities: COMMUNITY_ENDPOINT + '/favoritecommunities/',
 
     // survey
     retrieve_surveys: SURVEY_ENDPOINT + '/survey/',

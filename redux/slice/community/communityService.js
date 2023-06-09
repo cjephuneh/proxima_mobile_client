@@ -6,9 +6,9 @@ const getCommunities = async (communityData) => {
 
     // return response.data
     try {
-        const { data } = await axios.get(ApiUrls.retrieve_communities)
-
-        // console.log('comm ', data)
+        const { data } = await axios.post(ApiUrls.retrieve_communities, {
+            communityData
+        })
 
         return data
     } catch (error) {
@@ -17,11 +17,8 @@ const getCommunities = async (communityData) => {
 }
 
 const getACommunity = async (communityData) => {
-    // const response = await axios.post('/', communityData)
-
-    // return response.data
     try {
-        const { data } = await axios.get(`${ApiUrls.retrieve_communities}?community_id=${communityData}`)
+        const { data } = await axios.post(ApiUrls.retrieve_communities, communityData)
 
         return data
     } catch (error) {
@@ -37,8 +34,6 @@ const getCommunityIssues = async (communityData) => {
         const { data } = await axios.post(ApiUrls.retrieve_community_issues, {
             community_id: communityData
         })
-
-        // console.log('issues ', data)
 
         return data
     } catch (error) {
@@ -127,8 +122,20 @@ const retrieveCommunitySurveys = async (communityData) => {
     }
 }
 
+const favoriteCommunities = async (communityData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.favorite_communities, communityData)
+
+        return data
+    } catch (error) {
+        throw error
+    }
+}
+
+
+
 const communityService = {
-    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys
+    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities
 }
 
 export default communityService
