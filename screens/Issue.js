@@ -1,9 +1,9 @@
-import { View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, TextInput } from 'react-native'
+import { View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, TextInput, Alert } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRoute } from '@react-navigation/native'
-import { commentOnIssue, getIssueThread, getThreadComments, likeIssueComment, resetThreadComments } from '../redux/slice/community/communitySlice'
+import { commentOnIssue, getIssueThread, getThreadComments, likeIssueComment, resetThreadCommentsState, resetThreadState } from '../redux/slice/community/communitySlice'
 
 // TODO
 // Update comment likes locally
@@ -28,10 +28,49 @@ const Issue = () => {
 
     const { issue_id } = route.params
 
-    // console.log('issue id', issue_id)
-    const { issuethread, isIssueThreadSuccess, threadcomments, isThreadCommentsLoading, userLikeIssueComment } = useSelector((state) => state.community)
-    // console.log('issuethread', issuethread, isIssueThreadSuccess)
+    // retrieve issue thread
+    useEffect(() => {
+        issue_id && dispatch(getIssueThread(issue_id))
+    }, [issue_id, dispatch])
 
+    // retrieve fetched thread from store
+    const { issuethread, isIssueThreadSuccess, isIssueThreadLoading, isIssueThreadError, isIssueThreadMessage } = useSelector((state) => state.community)
+
+    // check if issue thread was fetched
+    useEffect(() => {
+        if(isIssueThreadError || isIssueThreadMessage){
+            Alert.alert('An error occured', 'Please try again later.')
+        }
+
+        // retrieve thread comments
+        if(issuethread && isIssueThreadSuccess){
+            dispatch(getThreadComments(issuethread[0].thread_id))
+        }
+
+        // reset state
+        dispatch(resetThreadState())
+    }, [dispatch, issuethread, isIssueThreadError, isIssueThreadMessage, isIssueThreadSuccess])
+
+    // retrieve thread comments
+    // useEffect(() => {
+    //     issuethread && issuethread.length > 0 && dispatch(getThreadComments(issuethread[0].thread_id))
+
+    //     dispatch(resetThreadCommentsState())
+    // }, [issuethread, dispatch])
+
+    // retrieve fetched thread comments from store
+    const { threadcomments, isThreadCommentsLoading, isThreadCommentsSuccess, isThreadCommentsError, isThreadCommentsMessage,
+        userLikeIssueComment 
+    } = useSelector((state) => state.community)
+
+    // check if thread comments were fetched
+    useEffect(() => {
+        if(isThreadCommentsError || isThreadCommentsMessage){
+            Alert.alert('Unable to fetch thread comments', 'Please refresh or try again later')
+        }
+
+        dispatch(resetThreadCommentsState())
+    }, [dispatch, isThreadCommentsError, isThreadCommentsMessage])
     // console.log(threadcomments)
 
     let users = [1,2,3]
@@ -43,20 +82,9 @@ const Issue = () => {
     const likeComment = (comment_id) => dispatch(likeIssueComment({comment_id, client_id: 1}))
 
     // reset thread comments on initial page load
-    useEffect(() => {
-        dispatch(resetThreadComments())
-    }, [issue_id, issuethread])
-
-    // retrieve issue thread
-    useEffect(() => {
-        issue_id && dispatch(getIssueThread(issue_id))
-    }, [issue_id])
-
-    // retrieve thread comments
-    useEffect(() => {
-        // dispatch(resetThreadComments())
-        issuethread && issuethread.length > 0 && dispatch(getThreadComments(issuethread[0].thread_id))
-    }, [issuethread])
+    // useEffect(() => {
+    //     dispatch(resetThreadComments())
+    // }, [issue_id, issuethread])
 
     // add a comment to a thread
     const addCommentToAThread = (thread_id) => {
@@ -70,8 +98,26 @@ const Issue = () => {
 
   return (
     <SafeAreaView className='pt-8 px-3 flex-1'>
-      <Text className='text-xl font-bold'>{issuethread && issuethread.length>0 && issuethread[0].issue.issue}</Text>
-      <Text className='mt-2'>{issuethread && issuethread.length>0 && issuethread[0].issue.description}</Text>
+      <Text className='text-xl font-bold'>
+        {/* {issuethread && issuethread.length>0 && issuethread[0].issue.issue} */}
+        {
+            isIssueThreadLoading ? <Text>Loading...</Text> :
+            (
+                issuethread?.length > 0 &&
+                issuethread[0].issue.issue 
+            )
+        }
+    </Text>
+      <Text className='mt-2'>
+        {/* {issuethread && issuethread.length>0 && issuethread[0].issue.description} */}
+        {
+            isIssueThreadLoading ? <Text>Loading...</Text> :
+            (
+                issuethread?.length > 0 &&
+                issuethread[0].issue.description 
+            )
+        }
+    </Text>
     
         {/* Issue */}
       {/* <View className='flex-row space-x-4 items-center mt-4'>
