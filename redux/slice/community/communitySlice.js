@@ -204,8 +204,17 @@ const communitySlice = createSlice({
     name: 'community',
     initialState,
     reducers: {
-        resetThreadComments: (state) => {
-            state.threadcomments = null
+        resetThreadState: (state) => {
+            // state.isIssueThreadLoading = false
+            state.isIssueThreadSuccess = false
+            state.isIssueThreadError = false
+            state.isIssueThreadMessage = ''
+        },
+        resetThreadCommentsState: (state) => {
+            state.isThreadCommentsError = false
+            // state.isThreadCommentsLoading = false
+            state.isThreadCommentsSuccess = false 
+            state.isThreadCommentsMessage = ''
         },
         resetIssueStatus: (state) => {
             state.isRaiseIssueSuccess = false;
@@ -380,6 +389,6 @@ const communitySlice = createSlice({
             })
 })
 
-export const { resetThreadComments, resetIssueStatus } = communitySlice.actions
+export const { resetThreadState, resetThreadCommentsState, resetIssueStatus } = communitySlice.actions
 
 export default communitySlice.reducer

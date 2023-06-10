@@ -10,9 +10,6 @@ const Stack = createNativeStackNavigator();
 
 const MainStackNav = () => {
   const user = useSelector((state) => state.auth.user);
-
-  console.log('user main stack nav: ', user);
-  console.log('main stack nav: ', typeof(user))
   
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
