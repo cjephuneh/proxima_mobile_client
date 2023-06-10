@@ -15,6 +15,8 @@ const Community = () => {
   // extract community_id passed from previous screen
   const { community_id } = route.params
 
+  // console.log(community_id)
+
   // fetch community data from store
   const { community, isCommunityLoading } = useSelector((state) => state.community)
 
@@ -23,8 +25,10 @@ const Community = () => {
 
   // retrieve community details
   useEffect(() => {
-    community_id && dispatch(getACommunity(community_id))
-  }, [])
+    community_id && dispatch(getACommunity({
+      community_id: community_id
+    }))
+  }, [community_id, dispatch])
   return (
     <SafeAreaView className='flex-1'>
       <View className='relative'>

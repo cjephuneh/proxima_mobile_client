@@ -5,6 +5,7 @@ const initialState = {
     chats: null,
     chatMessage: null,
     chatMessages: null,
+    chat: null,
 
     // chats
     isChatsLoading: false,
@@ -12,11 +13,17 @@ const initialState = {
     isChatsError: false,
     isChatsMessage: '',
 
+    // chat
+    isChatLoading: false,
+    isChatSuccess: false,
+    isChatError: false,
+    isChatMessage: '',
+
     // chat message
     isChatMessageLoading: false,
     isChatMessageSuccess: false,
     isChatMessageError: false,
-    isChatMessageMessage: '',
+    isChatMessage: '',
 
     // chat messages
     isChatMessagesLoading: false,
@@ -28,7 +35,32 @@ const initialState = {
 // retrieveChats
 export const retrieveChats = createAsyncThunk('chat/retrieveChats', async (chatData, thunkAPI) => {
     try {
-        return await chatService.retrieveChats(chatData)
+        const response = await chatService.retrieveChats(chatData)
+
+        if(response.error){
+            thunkAPI.rejectWithValue(response.error)
+            return
+        }
+
+        return response
+    } catch(error) {
+        console.error(error)
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// create chat
+export const createChat = createAsyncThunk('chat/createChat', async (chatData, thunkAPI) => {
+    try {
+        const response = await chatService.createChat(chatData)
+
+        if(response.error){
+            thunkAPI.rejectWithValue(response.error)
+            return
+        }
+
+        return response
     } catch(error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -63,7 +95,12 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-
+        resetChatState: (state) => {
+            state.isChatLoading = false
+            state.isChatMessage = ''
+            state.isChatError = false
+            state.isChatSuccess = false
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -80,6 +117,21 @@ const chatSlice = createSlice({
                 state.isChatsError = true
                 state.isChatsMessage = action.payload
                 state.chats = null 
+            })
+
+            .addCase(createChat.pending, (state) => {
+                state.isChatLoading = true
+            })
+            .addCase(createChat.fulfilled, (state, action) => {
+                state.isChatLoading = false
+                state.isChatSuccess = true
+                state.chat = action.payload
+            })
+            .addCase(createChat.rejected, (state, action) => {
+                state.isChatLoading = false
+                state.isChatError = true
+                state.isChatMessage = action.payload
+                state.chat = null 
             })
 
             .addCase(retrieveMessages.pending, (state) => {
@@ -113,5 +165,7 @@ const chatSlice = createSlice({
             })
     }
 })
+
+export const { resetChatState } = chatSlice.actions
 
 export default chatSlice.reducer

@@ -20,9 +20,13 @@ const retrieveMessages = async (messagesData) => {
     }
 }
 
-const retrieveChats = async (userData) => {
+const retrieveChats = async (chatData) => {
     try {
-        const { data } = await axios.post(ApiUrls.retrieve_chats, userData)
+        const { data } = await axios.post(ApiUrls.retrieve_chats, chatData)
+
+        if(data.message){
+            return { error: data.message.error }
+        }
 
         return data
     } catch (error) {
@@ -30,8 +34,22 @@ const retrieveChats = async (userData) => {
     }
 }
 
+const createChat = async (chatData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.retrieve_chats, chatData)
+
+        if(data.message){
+            return { error: data.message.error }
+        }
+        
+        return data
+    } catch (error) {
+        throw error
+    }
+}
+
 const chatService = {
-    sendMessage, retrieveChats, retrieveMessages
+    sendMessage, retrieveChats, retrieveMessages, createChat
 }
 
 export default chatService;

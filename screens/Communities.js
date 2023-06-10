@@ -69,7 +69,7 @@ const Communities = () => {
     </View>
       
         <Text className='text-2xl font-bold mt-2'>Find a community</Text>
-            <ScrollView className='mt-4 space-y-3'>
+            <ScrollView className='mt-4 space-y-3' showsVerticalScrollIndicator={false}>
             {   isCommunitiesLoading ?
                 <Text>Loading...</Text> : (
                     availableCommunities.length > 0 ?

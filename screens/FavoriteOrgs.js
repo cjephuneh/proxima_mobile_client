@@ -1,10 +1,14 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntDesign, EvilIcons, MaterialIcons, Octicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { retrieveFavoriteCommunities } from '../redux/slice/community/communitySlice'
 
 const FavoriteOrgs = () => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+
     const data = [
         {
             title: '18th Street Brewery',
@@ -33,22 +37,44 @@ const FavoriteOrgs = () => {
         
     ]
 
-    const [companies, setCompanies] = useState(data)
+    // fetch data from store
+    const { favoritecommunities, isFavoriteCommunitiesLoading, isFavoriteCommunitiesSuccess } = useSelector((state) => state.community)
+
+    const [availableCommunities, setCommunities] = useState([])
     const [searchWord, setSearchWord] = useState('')
 
+    // enable user to search through the list of available communities
     const searchFilterFunction = (text) => {
-        if(!text) setSearchWord(text);
+        if (!text) {
+            setSearchWord(text);
+            setCommunities(favoritecommunities); // Reset to original communities when the search field is empty
+            return;
+        }
+    
+        const newData = availableCommunities.filter((item) => {
+            const itemData = item.tenant_id.tenant_name ? item.tenant_id.tenant_name.toLowerCase() : '';
+            const searchData = text.toLowerCase();
+    
+            return itemData.indexOf(searchData) > -1;
+        });
+    
+        setCommunities(newData);
+        setSearchWord(text);
+    };
 
-        const newData = data.filter(item => {
-           const itemData = item.title ? item.title.toLowerCase() : ''.toLowerCase
-           const searchData = text.toLowerCase()
+    useEffect(() => {
+        // fetch Communities
+        dispatch(retrieveFavoriteCommunities({
+            client_id: 1
+        }))
+    }, [])
 
-           return itemData.indexOf(searchData) > -1
-        })
-
-        setCompanies(newData)
-        setSearchWord(text)
-    }
+    // update communities state
+    useEffect(() => {
+        if(isFavoriteCommunitiesSuccess && favoritecommunities !== null){
+            setCommunities(favoritecommunities)
+        }
+    }, [isFavoriteCommunitiesSuccess, favoritecommunities])
   return (
     <SafeAreaView className='flex-1 bg-white pt-8 px-3'>
         
@@ -73,7 +99,30 @@ const FavoriteOrgs = () => {
       <Text>Select who you want to chat with</Text>
 
       <ScrollView className='mt-4 space-y-3'>
-        {
+            {   isFavoriteCommunitiesLoading ?
+                <Text>Loading...</Text> : (
+                    availableCommunities.length > 0 ?
+
+                    availableCommunities.map((community,i) => (
+                        <TouchableOpacity testID='community-btn' key={i} onPress={() => navigation.navigate('community', {
+                            community_id: community.community_id
+                        })}>
+                            <View
+                                className='flex-row space-x-3 items-center'
+                            >
+                                <MaterialIcons name="groups" size={24} color="black" />
+                                <View>
+                                    <Text>{community.tenant_id.tenant_name}</Text>
+                                    <Text className='text-gray-500 text-sm'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    )) :
+
+                    <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>No communities found.</Text>
+                )
+            }
+        {/* {
             companies.length > 0 ?
 
             companies.map((chat,i) => (
@@ -94,7 +143,7 @@ const FavoriteOrgs = () => {
             )) :
 
             <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>Sorry, this company does not exist in your favorites list.</Text>
-        }
+        } */}
 
       </ScrollView>
     </SafeAreaView>

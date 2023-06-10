@@ -12,6 +12,7 @@ const initialState = {
     issuethread: null,
     threadcomments: null,
     communitysurveys: null,
+    favoritecommunities: null,
 
     // communities
     isCommunitiesLoading: false,
@@ -72,6 +73,12 @@ const initialState = {
     isCommunitySurveysSuccess: false,
     isCommunitySurveysError: false,
     isCommunitySurveysMessage: false,
+
+    // favorite communities
+    isFavoriteCommunitiesLoading: false,
+    isFavoriteCommunitiesSuccess: false,
+    isFavoriteCommunitiesError: false,
+    isFavoriteCommunitiesMessage: ''
 }
 
 // retrieve all communities
@@ -175,6 +182,17 @@ export const likeIssueComment = createAsyncThunk('community/likeIssueComment', a
 export const retrieveCommunitySurveys = createAsyncThunk('community/survey', async (communityData, thunkAPI) => {
     try {
         return await communityService.retrieveCommunitySurveys(communityData)
+    } catch (error) {
+        console.error(error)
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// favorite communities
+export const retrieveFavoriteCommunities = createAsyncThunk('community/favorites', async (communityData, thunkAPI) => {
+    try {
+        return await communityService.favoriteCommunities(communityData)
     } catch (error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -344,6 +362,21 @@ const communitySlice = createSlice({
                 state.isCommunitySurveysError = true,
                 state.isCommunitySurveysMessage = action.payload,
                 state.communitysurveys = null
+            })
+
+            .addCase(retrieveFavoriteCommunities.pending, (state) => {
+                state.isFavoriteCommunitiesLoading = true
+            })
+            .addCase(retrieveFavoriteCommunities.fulfilled, (state, action) => {
+                state.isFavoriteCommunitiesLoading = false,
+                state.isFavoriteCommunitiesSuccess = true,
+                state.favoritecommunities = action.payload
+            })
+            .addCase(retrieveFavoriteCommunities.rejected, (state, action) => {
+                state.isFavoriteCommunitiesLoading = false,
+                state.isFavoriteCommunitiesError = true,
+                state.isFavoriteCommunitiesMessage = action.payload,
+                state.favoritecommunities = null
             })
 })
 

@@ -67,11 +67,11 @@ const DrawerContent = (props) => {
         <View className='space-y-3 mt-6'>
           <View className='flex-row justify-between'>
             <Text>First name</Text>
-            <Text>John</Text>
+            <Text>{user && user.first_name}</Text>
           </View>
           <View className='flex-row justify-between'>
             <Text>Last name</Text>
-            <Text>Doe</Text>
+            <Text>{user && user.last_name}</Text>
           </View>
           <View className='flex-row justify-between'>
             <Text>Location</Text>
