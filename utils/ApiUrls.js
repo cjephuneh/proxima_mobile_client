@@ -24,6 +24,8 @@ export const ApiUrls =  {
     like_issue_comment: COMMUNITY_ENDPOINT + '/likeordislikecomment/',
     raise_issue: COMMUNITY_ENDPOINT + '/issue/',
     favorite_communities: COMMUNITY_ENDPOINT + '/favoritecommunities/',
+    join_community: COMMUNITY_ENDPOINT + '/joincommunity/',
+    leave_community: COMMUNITY_ENDPOINT + '/leavecommunity/',
 
     // survey
     retrieve_surveys: SURVEY_ENDPOINT + '/survey/',
