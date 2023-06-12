@@ -15,6 +15,8 @@ const Inbox = () => {
 
     const { chats, isChatsLoading, isChatsSuccess } = useSelector((state) => state.chat)
 
+    const { user } = useSelector((state) => state.auth)
+
     const [availableChats, setChats] = useState([])
     const [searchChat, setSearchChat] = useState('')
 
@@ -46,7 +48,7 @@ const Inbox = () => {
     )
 
     useEffect(() => {
-      dispatch(retrieveChats({chat_owner: 1}))
+      dispatch(retrieveChats({chat_owner: user.id}))
     }, [dispatch, navigation])
 
     // update chats state
@@ -102,7 +104,7 @@ const Inbox = () => {
                     testID='open-chat'
                 >
                     {/* <Image source={require('../assets/user.png')} /> */}
-                    <Octicons name="organization" size={24} color="black" />
+                    <Octicons name="organization" size={24} color="#2DABB1" />
                     <View className='flex-1'>
                         <Text className='font-semibold'>{chat.tenant_id.tenant_name}</Text>
                         {/* <Text className='font-bold'>{message.subject}</Text> */}
@@ -111,7 +113,7 @@ const Inbox = () => {
                     {/* <Text>{message.time}</Text> */}
                 </TouchableOpacity>
             )) :
-            <Text>No chats available</Text>
+            <Text className='text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No chats available</Text>
             )
           }
           </View>

@@ -132,6 +132,16 @@ const favoriteCommunities = async (communityData) => {
     }
 }
 
+const toggleFavoriteCommunities = async (communityData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.favorite_communities, communityData)
+
+        return data
+    } catch (error) {
+        throw error
+    }
+}
+
 const joinCommunity = async (communityData) => {
     try {
         const { data } = await axios.post(ApiUrls.join_community, communityData)
@@ -165,7 +175,7 @@ const leaveCommunity = async (communityData) => {
 
 
 const communityService = {
-    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities, joinCommunity, leaveCommunity
+    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities, toggleFavoriteCommunities, joinCommunity, leaveCommunity
 }
 
 export default communityService

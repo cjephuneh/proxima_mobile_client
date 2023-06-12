@@ -1,4 +1,4 @@
-const BASE_URI = 'http://192.168.1.6:3000/api'
+const BASE_URI = 'http://192.168.1.18:3000/api'
 
 // auth
 const REGISTER_ENDPOINT = BASE_URI + '/auth/client'

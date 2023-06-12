@@ -21,7 +21,7 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
 
     // filter communities to make sure the ones with created chats are not displayed
     const communitiesToDisplay = communities?.filter(community => (
-        !chats.some(cht => 
+        !chats?.some(cht => 
             cht.tenant_id.tenant_id === community.tenant_id.tenant_id
         )
     ))
@@ -32,9 +32,6 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
         dispatch(getCommunities())
     }, [dispatch])
 
-    // fetch data to track chat creation
-    const { chat, isChatLoading, isChatSuccess, isChatError, isChatMessage } = useSelector((state) => state.chat)
-
     // create chat
     const createClientChat = (tenantId) => {
         dispatch(createChat({
@@ -44,6 +41,9 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
             guest_client: 12
         }))
     }
+
+    // fetch data to track chat creation
+    const { chat, isChatLoading, isChatSuccess, isChatError, isChatMessage } = useSelector((state) => state.chat)
 
     // check if chat was created and navigate
     useEffect(() => {
@@ -69,7 +69,7 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
         item.tenant_id.tenant_name.toLowerCase().includes(searchText.toLowerCase())
       )
   return (
-    <Modal visible={showModal}>
+    <Modal visible={showModal} animationType='slide' onRequestClose={() => setShowModal(!showModal)}>
         <View className='flex-1 bg-white'>
             {/* Nav */}
             <View className='flex-row items-center border-b border-gray-200 p-2'>
@@ -109,20 +109,20 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
                         filteredOrgs?.length > 0 ?
 
                         filteredOrgs.map((community,i) => (
-                            <TouchableOpacity disabled={!isChatLoading} testID='community-btn' key={i} onPress={() => createClientChat(community.tenant_id.tenant_id)}>
+                            <TouchableOpacity disabled={isChatLoading} testID='community-btn' key={i} onPress={() => createClientChat(community.tenant_id.tenant_id)}>
                                 <View
                                     className='flex-row space-x-3 items-center'
                                 >
-                                    <MaterialIcons name="groups" size={24} color="black" />
+                                    <MaterialIcons name="groups" size={24} color="#2DABB1" />
                                     <View>
                                         <Text>{community.tenant_id.tenant_name}</Text>
-                                        <Text className='text-gray-500 text-sm'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
+                                        <Text className='text-gray-500 text-xs'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
                         )) :
 
-                        <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>No organizations found.</Text>
+                        <Text className='text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No organizations found.</Text>
                     )
                 }
             </ScrollView>

@@ -44,23 +44,26 @@ const FavoriteOrgs = () => {
     const [searchWord, setSearchWord] = useState('')
 
     // enable user to search through the list of available communities
-    const searchFilterFunction = (text) => {
-        if (!text) {
-            setSearchWord(text);
-            setCommunities(favoritecommunities); // Reset to original communities when the search field is empty
-            return;
-        }
+    // const searchFilterFunction = (text) => {
+    //     if (!text) {
+    //         setSearchWord(text);
+    //         setCommunities(favoritecommunities); // Reset to original communities when the search field is empty
+    //         return;
+    //     }
     
-        const newData = availableCommunities.filter((item) => {
-            const itemData = item.tenant_id.tenant_name ? item.tenant_id.tenant_name.toLowerCase() : '';
-            const searchData = text.toLowerCase();
+    //     const newData = availableCommunities.filter((item) => {
+    //         const itemData = item.tenant_id.tenant_name ? item.tenant_id.tenant_name.toLowerCase() : '';
+    //         const searchData = text.toLowerCase();
     
-            return itemData.indexOf(searchData) > -1;
-        });
+    //         return itemData.indexOf(searchData) > -1;
+    //     });
     
-        setCommunities(newData);
-        setSearchWord(text);
-    };
+    //     setCommunities(newData);
+    //     setSearchWord(text);
+    // };
+    const filteredOrgs = availableCommunities?.filter(item =>
+        item.tenant_id.tenant_name.toLowerCase().includes(searchWord.toLowerCase())
+      )
 
     useEffect(() => {
         // fetch Communities
@@ -85,7 +88,7 @@ const FavoriteOrgs = () => {
                 className='flex-1'
                 placeholder='Search your favorite organization'
                 value={searchWord}
-                onChangeText={(text) => searchFilterFunction(text)}
+                onChangeText={(text) => setSearchWord(text)}
             />
         </View>
     <TouchableOpacity
@@ -101,9 +104,9 @@ const FavoriteOrgs = () => {
       <ScrollView className='mt-4 space-y-3'>
             {   isFavoriteCommunitiesLoading ?
                 <Text>Loading...</Text> : (
-                    availableCommunities.length > 0 ?
+                    filteredOrgs.length > 0 ?
 
-                    availableCommunities.map((community,i) => (
+                    filteredOrgs.map((community,i) => (
                         <TouchableOpacity testID='community-btn' key={i} onPress={() => navigation.navigate('community', {
                             community_id: community.community_id
                         })}>
@@ -119,7 +122,7 @@ const FavoriteOrgs = () => {
                         </TouchableOpacity>
                     )) :
 
-                    <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>No communities found.</Text>
+                    <Text className='text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No favorite communities found</Text>
                 )
             }
         {/* {

@@ -1,11 +1,13 @@
 import { View, Text, SafeAreaView, Image, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign, Entypo, EvilIcons, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons'
+import { AntDesign, Entypo, EvilIcons, FontAwesome, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCommunities, raiseIssue, resetIssueStatus } from '../redux/slice/community/communitySlice'
 
 const CreateIssue = () => {
   const dispatch = useDispatch()
+
+  const { user } = useSelector((state) => state.auth)
     // const tagsData = [
     //     'milk',
     //     'food',
@@ -42,7 +44,7 @@ const CreateIssue = () => {
 
       // TODO: Replace fixed values with dynamic data
       dispatch(raiseIssue({
-        client_id: 1,
+        client_id: user.id,
         community_id: selectedOrg.community_id,
         issue: issueTitle,
         description: issueDescription,
@@ -51,7 +53,6 @@ const CreateIssue = () => {
     }
 
     // Alert user if issue was raised
-    console.log(isRaiseIssueError, isRaiseIssueSuccess)
     useEffect(() => {
       if(isRaiseIssueSuccess){
         Alert.alert('Success',
@@ -83,8 +84,11 @@ const CreateIssue = () => {
       <Text className='text-2xl font-bold text-center'>Create an issue</Text>
 
       <View className='mt-3 flex-row space-x-3 items-center'>
-        <Image source={require('../assets/user.png')} />
-        <Text className='font-semibold text-lg'>Kevin Kimani</Text>
+        {/* <Image source={require('../assets/user.png')} /> */}
+        <View className='h-9 w-9 rounded-full items-center justify-center bg-[#2DABB1]'>
+        <FontAwesome name="user" size={24} color="white" />
+        </View>
+        <Text className='font-semibold text-lg'>{user.first_name} {user.last_name}</Text>
       </View>
 
       {

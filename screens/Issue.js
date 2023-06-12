@@ -28,6 +28,8 @@ const Issue = () => {
 
     const { issue_id } = route.params
 
+    const { user } = useSelector((state) => state.auth)
+
     // retrieve issue thread
     useEffect(() => {
         issue_id && dispatch(getIssueThread(issue_id))
@@ -79,7 +81,7 @@ const Issue = () => {
     const [comment, setComment] = useState(null)
 
     // like comment
-    const likeComment = (comment_id) => dispatch(likeIssueComment({comment_id, client_id: 1}))
+    const likeComment = (comment_id) => dispatch(likeIssueComment({comment_id, client_id: user.id}))
 
     // reset thread comments on initial page load
     // useEffect(() => {
@@ -90,7 +92,7 @@ const Issue = () => {
     const addCommentToAThread = (thread_id) => {
         if(comment.trim().length === 0) return
         
-        dispatch(commentOnIssue({thread_id, comment_description: comment, client_id: 3}))
+        dispatch(commentOnIssue({thread_id, comment_description: comment, client_id: user.id}))
 
         // clear the comment box
         setComment(null)

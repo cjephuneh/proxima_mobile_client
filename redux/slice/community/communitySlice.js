@@ -15,6 +15,7 @@ const initialState = {
     favoritecommunities: null,
     joincommunity: null,
     leavecommunity: null,
+    addtofavorites: null,
 
     // communities
     isCommunitiesLoading: false,
@@ -93,6 +94,12 @@ const initialState = {
     isLeaveCommunitySuccess: false,
     isLeaveCommunityError: false,
     isLeaveCommunityMessage: '',
+
+    // add or remove from favs
+    isAddToFavsLoading: false,
+    isAddToFavsSuccess: false,
+    isAddToFavsError: true,
+    isAddToFavsMessage: '',
 }
 
 // retrieve all communities
@@ -248,6 +255,17 @@ export const clientLeaveCommunity = createAsyncThunk('/community/leavecommunity'
     }
 })
 
+// add or remove from favs
+export const addOrRemoveFromFavs = createAsyncThunk('community/favs', async (communityData, thunkAPI) => {
+    try {
+        return await communityService.toggleFavoriteCommunities(communityData)
+    } catch (error) {
+        console.error(error)
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 
 const communitySlice = createSlice({
     name: 'community',
@@ -280,6 +298,12 @@ const communitySlice = createSlice({
             state.isLeaveCommunityError = false,
             state.isLeaveCommunityMessage = ''
             state.isLeaveCommunitySuccess = false
+        },
+        resetAddOrRemoveFromFavs: (state) => {
+            state.isAddToFavsLoading = false,
+            state.isAddToFavsError = false,
+            state.isAddToFavsMessage = ''
+            state.isAddToFavsSuccess = false
         }
     }, 
     extraReducers: (builder) => 
@@ -478,8 +502,23 @@ const communitySlice = createSlice({
                 state.isLeaveCommunityMessage = action.payload,
                 state.leavecommunity = null
             })
+
+            .addCase(addOrRemoveFromFavs.pending, (state) => {
+                state.isAddToFavsLoading = true
+            })
+            .addCase(addOrRemoveFromFavs.fulfilled, (state, action) => {
+                state.isAddToFavsLoading = false,
+                state.isAddToFavsSuccess = true,
+                state.addtofavorites = action.payload
+            })
+            .addCase(addOrRemoveFromFavs.rejected, (state, action) => {
+                state.isAddToFavsLoading = false,
+                state.isAddToFavsError = true,
+                state.isAddToFavsMessage = action.payload,
+                state.addtofavorites = null
+            })
 })
 
-export const { resetThreadState, resetThreadCommentsState, resetIssueStatus, resetJoinCommunityState, resetLeaveCommunityState } = communitySlice.actions
+export const { resetThreadState, resetThreadCommentsState, resetIssueStatus, resetJoinCommunityState, resetLeaveCommunityState, resetAddOrRemoveFromFavs } = communitySlice.actions
 
 export default communitySlice.reducer
