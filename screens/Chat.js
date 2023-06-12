@@ -22,8 +22,6 @@ const Chat = () => {
     // retrieve data from store
     const { chatMessages, isChatMessagesLoading, isChatMessagesSuccess } = useSelector((state) => state.chat)
 
-    console.log(chatMessages)
-
     const [message, setMessage] = useState(null)
     const [recording, setRecording] = useState();
     // const [sound, setSound] = useState()
@@ -220,8 +218,8 @@ const Chat = () => {
               (
                 isChatMessagesSuccess && chatMessages &&
 
-                // reversed messages array to sort the messages
-                [...chatMessages].reverse().map((message, index) => (
+                // sort the messages
+                [...chatMessages].sort((a, b) => a.message_id - b.message_id).map((message, index) => (
                     <Text key={index} 
                         className={message.message_sender === 'client' ? 'bg-[#2DABB1] px-4 py-2 rounded text-white w-fit self-end' : 'bg-gray-300 px-4 py-2 rounded text-black w-fit self-start'}
                     >
@@ -257,13 +255,13 @@ const Chat = () => {
         </View> :
         <View className='my-4 flex-row justify-between'>
             <TouchableOpacity onPress={() => stopRecording()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
-                <MaterialCommunityIcons name="delete" size={24} color="gray" />
+                <MaterialCommunityIcons name="delete" size={24} color="red" />
             </TouchableOpacity>            
             {
               recordingPaused ?
 
               <TouchableOpacity onPress={() => resumeAudio()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
-                <FontAwesome name="play" size={24} color="black" />
+                <FontAwesome name="microphone" size={24} color="#2DABB1" />
               </TouchableOpacity> : 
 
               <TouchableOpacity onPress={() => pauseAudio()} activeOpacity={0.9} className='px-2 py-1 mb-2'>

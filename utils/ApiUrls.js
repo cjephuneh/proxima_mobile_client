@@ -1,4 +1,4 @@
-const BASE_URI = 'http://192.168.1.6:3000/api'
+const BASE_URI = 'http://192.168.1.18:3000/api'
 
 // auth
 const REGISTER_ENDPOINT = BASE_URI + '/auth/client'
@@ -24,6 +24,8 @@ export const ApiUrls =  {
     like_issue_comment: COMMUNITY_ENDPOINT + '/likeordislikecomment/',
     raise_issue: COMMUNITY_ENDPOINT + '/issue/',
     favorite_communities: COMMUNITY_ENDPOINT + '/favoritecommunities/',
+    join_community: COMMUNITY_ENDPOINT + '/joincommunity/',
+    leave_community: COMMUNITY_ENDPOINT + '/leavecommunity/',
 
     // survey
     retrieve_surveys: SURVEY_ENDPOINT + '/survey/',

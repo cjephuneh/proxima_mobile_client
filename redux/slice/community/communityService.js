@@ -132,10 +132,50 @@ const favoriteCommunities = async (communityData) => {
     }
 }
 
+const toggleFavoriteCommunities = async (communityData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.favorite_communities, communityData)
+
+        return data
+    } catch (error) {
+        throw error
+    }
+}
+
+const joinCommunity = async (communityData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.join_community, communityData)
+
+        // can't join community
+        if(data.message){
+            return { error: data.message.error }
+        }
+
+        return data
+    } catch (error) {
+        throw error
+    }
+}
+
+const leaveCommunity = async (communityData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.leave_community, communityData)
+
+        // can't leave community
+        if(data.message){
+            return { error: data.message.error }
+        }
+
+        else return data
+    } catch (error) {
+        throw error
+    }
+}
+
 
 
 const communityService = {
-    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities
+    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities, toggleFavoriteCommunities, joinCommunity, leaveCommunity
 }
 
 export default communityService
