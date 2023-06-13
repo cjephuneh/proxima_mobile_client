@@ -103,9 +103,9 @@ const Community = () => {
 
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeAreaView className='flex-1 pt-8'>
       <View className='relative'>
-        <Image source={require('../assets/companyBg.png')} resizeMode='cover' className='h-40 w-full' />
+        {/* <Image source={require('../assets/companyBg.png')} resizeMode='cover' className='h-40 w-full' /> */}
         <View className='justify-center items-center'>
         </View>
       </View>
