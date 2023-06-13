@@ -3,9 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { AntDesign, Entypo, EvilIcons, FontAwesome, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCommunities, raiseIssue, resetIssueStatus } from '../redux/slice/community/communitySlice'
+import { useRoute } from '@react-navigation/native'
 
 const CreateIssue = () => {
   const dispatch = useDispatch()
+  const route = useRoute()
+
+  const community_id = route?.params?.community_id
 
   const { user } = useSelector((state) => state.auth)
     // const tagsData = [
@@ -102,7 +106,7 @@ const CreateIssue = () => {
                 <EvilIcons name="search" size={24} color="black" />
                 <TextInput
                     className='flex-1'
-                    placeholder='Search Organization'
+                    placeholder='Search Community'
                     value={searchText}
                     onChangeText={text => setSearchText(text)}
                 />
@@ -134,7 +138,7 @@ const CreateIssue = () => {
             {
               selectedOrg ?
               <TouchableOpacity activeOpacity={0.9} onPress={() => setSelectedOrg(null)} className='relative bg-[#2DABB1] px-4 py-2 font-semibold text-white self-start rounded'>
-                <Text className='font-semibold text-white'>{selectedOrg.tenant_id.tenant_name}</Text>
+                <Text className='font-semibold text-white'>{selectedOrg?.tenant_id.tenant_name}</Text>
                 <TouchableOpacity className='absolute right-0 top-0' activeOpacity={0.9} onPress={() => setSelectedOrg(null)}>
                   <Entypo name="cross" size={18} color="red" />
                 </TouchableOpacity>

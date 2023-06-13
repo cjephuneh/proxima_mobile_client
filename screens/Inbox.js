@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { EvilIcons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
+import { EvilIcons, FontAwesome5, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveChats } from '../redux/slice/chat/chatSlice';
@@ -49,7 +49,7 @@ const Inbox = () => {
 
     useEffect(() => {
       dispatch(retrieveChats({chat_owner: user.id}))
-    }, [dispatch, navigation])
+    }, [dispatch, navigation, user])
 
     // update chats state
     useEffect(() => {
@@ -61,7 +61,7 @@ const Inbox = () => {
   return (
     <SafeAreaView className='pt-8 flex-1 bg-white px-3 relative'>
       <ChatCreateModal showModal={showModal} setShowModal={setShowModal} />
-      <View className='flex-row space-x-3'>
+      <View className='flex-row space-x-3 items-center'>
         <View className='flex-row bg-gray-200 rounded-lg px-2 space-x-3 py-2 items-center flex-1'>
             <EvilIcons name="search" size={24} color="black" />
             <TextInput
@@ -74,14 +74,16 @@ const Inbox = () => {
             activeOpacity={0.9}
             onPress={() => navigation.openDrawer()}
             testID='profile-pic'
+            className='h-10 w-10 border-2 border-gray-200 rounded-full justify-center items-center'
         >
-            <Image source={require('../assets/user.png')} />
+            {/* <Image source={require('../assets/user.png')} /> */}
+            <FontAwesome5 name="user-alt" size={20} color="black" />
         </TouchableOpacity>
       </View>
 
-      <View className='flex-row items-center justify-between mt-6'>
+      <View className='flex-row items-center justify-between mt-3'>
         <Text className='text-2xl font-bold'>Inbox</Text>
-        <Text className='text-xl font-bold bg-[#2DABB1] text-white px-6 py-1 text-center rounded-full'>Chat</Text>
+        {/* <Text className='text-xl font-bold bg-[#2DABB1] text-white px-6 py-1 text-center rounded-full'>Chat</Text> */}
       </View>
 
       <ScrollView className='space-y-3 flex-1' showsVerticalScrollIndicator={false}>
@@ -90,7 +92,7 @@ const Inbox = () => {
             Unread - 
           <Text testID='unread-chats-count'>{data.filter(dt => dt.read === false).length}</Text>
           </Text> */}
-          <View testID='unread-chats' className='space-y-3 mt-3'>
+          <View testID='unread-chats' className='space-y-4 mt-3'>
           {
             isChatsLoading ? <Text>Chats loading...</Text> :
 

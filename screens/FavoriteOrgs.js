@@ -9,6 +9,8 @@ const FavoriteOrgs = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
 
+    const { user } = useSelector((state) => state.auth)
+
     const data = [
         {
             title: '18th Street Brewery',
@@ -68,7 +70,7 @@ const FavoriteOrgs = () => {
     useEffect(() => {
         // fetch Communities
         dispatch(retrieveFavoriteCommunities({
-            client_id: 1
+            client_id: user.id
         }))
     }, [])
 
@@ -98,8 +100,8 @@ const FavoriteOrgs = () => {
     </TouchableOpacity>
     </View>
       
-      <Text className='text-2xl font-bold mt-2'>Find a chat</Text>
-      <Text>Select who you want to chat with</Text>
+      <Text className='text-2xl font-bold mt-2'>Favorite Organizations</Text>
+      <Text>Explore your favorite organizations</Text>
 
       <ScrollView className='mt-4 space-y-3'>
             {   isFavoriteCommunitiesLoading ?
