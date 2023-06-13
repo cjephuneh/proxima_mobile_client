@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign, EvilIcons, MaterialIcons } from '@expo/vector-icons'
+import { AntDesign, EvilIcons, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { addOrRemoveFromFavs, getCommunities, resetAddOrRemoveFromFavs, retrieveFavoriteCommunities } from '../redux/slice/community/communitySlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -110,8 +110,10 @@ const Communities = () => {
             activeOpacity={0.9}
             onPress={() => navigation.openDrawer()}
             testID='profile-pic'
+            className='h-10 w-10 border-2 border-gray-200 rounded-full justify-center items-center'
         >
-            <Image source={require('../assets/user.png')} />
+            {/* <Image source={require('../assets/user.png')} /> */}
+            <FontAwesome5 name="user-alt" size={20} color="black" />
         </TouchableOpacity>
     </View>
       

@@ -145,15 +145,15 @@ const Issue = () => {
 
         {/* Replies */}
         <ScrollView 
-            className='flex-1 my-2 pl-4 space-y-4' 
+            className='flex-1 my-2 space-y-4 pl-2' 
             showsVerticalScrollIndicator={false}
             ref={scrollViewRef}
             testID='reply-section'
         >
             {
                 isThreadCommentsLoading ? <Text>Loading comments...</Text> :
-                threadcomments && threadcomments.map((comment, i) => (
-                    <View key={comment.comment_id}>
+                threadcomments && [...threadcomments].sort((a, b) => a.comment_id - b.comment_id).map((comment, i) => (
+                    <View key={comment.comment_id} className='border border-gray-200 rounded p-2 '>
                         <View className='flex-row space-x-2 items-center'>
                             {/* <Image
                                 source={require('../assets/user.png')}

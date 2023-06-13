@@ -10,6 +10,8 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
+    const { user } = useSelector((state) => state.auth)
+
     // show search bar
     const [showSearch, setShowSearch] = useState(false)
 
@@ -36,9 +38,9 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
     const createClientChat = (tenantId) => {
         dispatch(createChat({
             tenant_id: tenantId,
-            chat_owner: 1,
+            chat_owner: user.id,
             client_satisfaction: true,
-            guest_client: 12
+            // guest_client: 12
         }))
     }
 
@@ -47,13 +49,14 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
 
     // check if chat was created and navigate
     useEffect(() => {
+        console.log(chat)
         if(isChatError || isChatMessage){
             Alert.alert('Failed', 'Unable to create chat. Please try again later')
         }
 
         if(isChatSuccess && chat){
             // fetch new chats
-            dispatch(retrieveChats({chat_owner: 1}))
+            dispatch(retrieveChats({chat_owner: user.id}))
             // navigate to chat
             navigation.navigate('chat', { chat_id: chat.chat_id })
         }

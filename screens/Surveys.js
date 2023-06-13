@@ -20,7 +20,7 @@ export default function Surveys(){
     // retrieve community surveys
     useEffect(() => {
         // TODO => replace 1 with a dynamic community_id
-        community_id && dispatch(retrieveCommunitySurveys({ tenant_id: 1}))
+        community_id && dispatch(retrieveCommunitySurveys({ tenant_id: community_id}))
     }, [])
     return (
         community_id &&
@@ -53,7 +53,7 @@ export default function Surveys(){
                     <Text>Loading surveys...</Text> :
 
                     (
-                        isCommunitySurveysSuccess && communitysurveys.data.length > 0 &&
+                        isCommunitySurveysSuccess && communitysurveys.data.length > 0 ?
 
                         <>
                             {
@@ -72,7 +72,9 @@ export default function Surveys(){
                                     </TouchableOpacity>
                                 ))
                             }
-                        </>
+                        </> :
+
+                        <Text>No surveys available for this community</Text>
                     )
                 }
             </ScrollView>
