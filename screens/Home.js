@@ -1,6 +1,6 @@
-import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign, EvilIcons, Feather, FontAwesome5, MaterialIcons, Octicons } from '@expo/vector-icons'
+import { AntDesign, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { retrieveChats } from '../redux/slice/chat/chatSlice'
@@ -8,50 +8,6 @@ import { retrieveChats } from '../redux/slice/chat/chatSlice'
 const Home = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
-    const data = [
-        // {
-        //     title: '18th Street Brewery',
-        //     location: 'Dakley Avenue, Hammond, IN'
-        // },
-        // {
-        //     title: '16th Street',
-        //     location: 'Brooklyn, NY'
-        // },
-        // {
-        //     title: '169th Street',
-        //     location: 'Brooklyn, NY'
-        // },
-        // {
-        //     title: '18th Street Brewery',
-        //     location: 'Dakley Avenue, Hammond, IN'
-        // },
-        // {
-        //     title: '16th Street',
-        //     location: 'Brooklyn, NY'
-        // },
-        // {
-        //     title: '169th Street',
-        //     location: 'Brooklyn, NY'
-        // },
-        
-    ]
-
-    const [companies, setCompanies] = useState(data)
-    const [searchWord, setSearchWord] = useState('')
-
-    const searchFilterFunction = (text) => {
-        if(!text) setSearchWord(text);
-
-        const newData = data.filter(item => {
-           const itemData = item.title ? item.title.toLowerCase() : ''.toLowerCase
-           const searchData = text.toLowerCase()
-
-           return itemData.indexOf(searchData) > -1
-        })
-
-        setCompanies(newData)
-        setSearchWord(text)
-    }
 
     const { chats, isChatsLoading, isChatsSuccess } = useSelector((state) => state.chat)
 
@@ -142,14 +98,10 @@ const Home = () => {
                                             testID='open-chat'
                                             style={{elevation: 2, shadowColor: 'white'}}
                                         >
-                                            {/* <Image source={require('../assets/user.png')} /> */}
                                             <AntDesign name="message1" size={20} color="#2DABB1" />
                                             <View className='flex-1'>
                                                 <Text className='font-semibold text-md'>{chat.tenant_id.tenant_name}</Text>
-                                                {/* <Text className='font-bold'>{message.subject}</Text> */}
-                                                {/* <Text>{message.message.length > 30 ? message.message.slice(0, 30)+'...' : message.message}</Text> */}
                                             </View>
-                                            {/* <Text>{message.time}</Text> */}
                                         </TouchableOpacity>
                                     )) :
                                     <Text className='text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No recent chats available</Text>

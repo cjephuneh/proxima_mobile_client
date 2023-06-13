@@ -30,8 +30,6 @@ export default function SurveyQuestions(){
                             placeholder='Type your answer'
                             className='border border-gray-200 p-2'
                             multiline
-                            // value={message}
-                            // onChangeText={text => setMessage(text)}
                             style={{
                                 maxHeight: 90,
                                 height: 'auto'

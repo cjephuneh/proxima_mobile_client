@@ -28,42 +28,6 @@ const Chat = () => {
     const [recordingPaused, setRecordingPaused] = useState(false)
 
     const scrollViewRef = useRef();
-    const msgs = [
-        {
-          message: "Hello, I recently purchased one of your products, and unfortunately, it's defective.",
-          sender: "Me"
-        },
-        {
-          message: "I apologize for the inconvenience. Could you please provide more details about the issue?",
-          sender: "Other"
-        },
-        {
-          message: "The product doesn't power on at all, even after trying different power sources.",
-          sender: "Me"
-        },
-        {
-          message: "I'm sorry to hear that. We will assist you with a replacement. Please provide your order details.",
-          sender: "Other"
-        },
-        {
-          message: "Thank you for your quick response. My order number is 123456789.",
-          sender: "Me"
-        },
-        {
-          message: "Noted. We will arrange for a replacement to be shipped to you within the next two business days.",
-          sender: "Other"
-        },
-        {
-          message: "That sounds great. I appreciate your help in resolving this issue.",
-          sender: "Me"
-        },
-        {
-          message: "You're welcome! If you have any further questions, feel free to ask. We're here to assist you.",
-          sender: "Other"
-        }
-    ]
-
-    const [messages, setMessages] = useState(msgs)
 
     // send a message
     const sendClientMessage = () => {

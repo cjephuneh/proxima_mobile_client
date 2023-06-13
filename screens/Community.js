@@ -28,7 +28,6 @@ const Community = () => {
   const setUserInfo = async () => {
     let userInfo = await getInfo()
     setUser(userInfo)
-    // console.log('user info ', userInfo)
   }
 
   // run the setUserinfo function once on page load
@@ -36,16 +35,11 @@ const Community = () => {
     setUserInfo()
   }, [])
 
-  let users = [1,2,3]
-
   // extract community_id passed from previous screen
   const { community_id } = route.params
 
   // fetch community data from store
   const { community, isCommunityLoading } = useSelector((state) => state.community)
-
-  // track community state locally
-  // const [currentCommunity, setCurrentCommunity] = useState(community && community[0])
 
   // retrieve community details
   useEffect(() => {
@@ -99,7 +93,6 @@ const Community = () => {
     }
 
     if(leavecommunity && isLeaveCommunitySuccess){
-      // setIsMember(true)
       dispatch(getACommunity({
         community_id: community_id
       }))
@@ -133,23 +126,10 @@ const Community = () => {
 
                 <View className='flex-row space-x-4 items-center mt-4 mx-auto'>
                     <View className='flex-row'>
-                        {/* {
-                            users.map((user, i) => (
-                                <View key={i} className={i > 0 ? '-mx-2 border-2 border-white rounded-full' : 'border-2 border-white rounded-full'}>
-                                    <Image 
-                                        key={i}
-                                        source={require('../assets/user.png')}
-                                        
-                                    />
-                                </View>
-                            ))
-                        } */}
-                        <MaterialCommunityIcons name="account-group" size={24} color="black" />
-                        
+                        <MaterialCommunityIcons name="account-group" size={24} color="black" />   
                     </View>
 
                     <TouchableOpacity className='flex-row space-x-2'>
-                        {/* <AntDesign name="hearto" size={18} color="#2DABB1" /> */}
                         <Text className='font-semibold text-[#2DABB1]'>{community[0].members.length} members</Text>
                     </TouchableOpacity>
                 </View>

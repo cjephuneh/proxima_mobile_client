@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Modal, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native'
+import { View, Text, Modal, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { getCommunities } from '../redux/slice/community/communitySlice'
@@ -19,8 +19,6 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
     const { communities, isCommunitiesLoading, isCommunitiesSuccess } = useSelector((state) => state.community)
     const { chats } = useSelector((state) => state.chat)
 
-    // console.log(chats)
-
     // filter communities to make sure the ones with created chats are not displayed
     const communitiesToDisplay = communities?.filter(community => (
         !chats?.some(cht => 
@@ -40,7 +38,6 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
             tenant_id: tenantId,
             chat_owner: user.id,
             client_satisfaction: true,
-            // guest_client: 12
         }))
     }
 

@@ -12,11 +12,6 @@ const CreateIssue = () => {
   const community_id = route?.params?.community_id
 
   const { user } = useSelector((state) => state.auth)
-    // const tagsData = [
-    //     'milk',
-    //     'food',
-    //     'general'
-    // ]
 
     // fetch all communities on initial page load
     useEffect(() => {
@@ -30,12 +25,7 @@ const CreateIssue = () => {
     const [searchText, setSearchText] = useState('')
     const [issueTitle, setIssueTitle] = useState(null)
     const [issueDescription, setIssueDescription] = useState(null)
-    // const [tags, setTags] = useState([])
-    // const [tag, setTag] = useState('')
-
-    // console.log('selected', selectedOrg)
-
-    // const filteredOrgs = communities && communities.filter(org => org.tenant_id.tenant_id.tenant_name.toLowerCase().includes(searchText.toLowerCase()))
+    
     const filteredOrgs = communities && communities.filter(org =>
       org.tenant_id.tenant_name.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -46,7 +36,6 @@ const CreateIssue = () => {
         return;
       }
 
-      // TODO: Replace fixed values with dynamic data
       dispatch(raiseIssue({
         client_id: user.id,
         community_id: selectedOrg.community_id,
@@ -124,17 +113,6 @@ const CreateIssue = () => {
                 ))
               }
             </ScrollView>
-
-            {/* {
-              selectedOrg &&
-
-              <TouchableOpacity activeOpacity={0.9} className='relative bg-[#2DABB1] px-4 py-2 font-semibold text-white self-start rounded'>
-                <Text className='font-semibold text-white'>{selectedOrg}</Text>
-                <TouchableOpacity className='absolute right-0 top-0' activeOpacity={0.9} onPress={() => setSelectedOrg(null)}>
-                  <Entypo name="cross" size={18} color="red" />
-                </TouchableOpacity>
-              </TouchableOpacity>
-            } */}
             {
               selectedOrg ?
               <TouchableOpacity activeOpacity={0.9} onPress={() => setSelectedOrg(null)} className='relative bg-[#2DABB1] px-4 py-2 font-semibold text-white self-start rounded'>
@@ -172,38 +150,7 @@ const CreateIssue = () => {
                 value={issueDescription}
                 onChangeText={text => setIssueDescription(text)}
                 editable={selectedOrg === null ? false : true}
-            />
-
-            {/* <Text>Add tags for your issue to make it easy to find</Text> */}
-
-            {/* <ScrollView horizontal showsHorizontalScrollIndicator={false} className='flex-row gap-2 flex-wrap'>
-                {
-                    tags.map((tag, i) => (
-                      <View key={i} className='bg-gray-200 flex-row items-center rounded'>
-                          <Text className= 'px-2 py-1 rounded font-semibold'>{tag}</Text>
-                          <TouchableOpacity activeOpacity={0.9} className='p-1' onPress={() => setTags(tags.filter(tg => tg !== tag))}>
-                            <MaterialCommunityIcons name="delete" size={16} color="red" />
-                          </TouchableOpacity>
-                      </View>
-                    ))
-                }
-            </ScrollView> */}
-
-            {/* <View className='space-y-3'>
-              <View className='flex-row items-center gap-3'>
-                <TextInput
-                    className='flex-1 bg-gray-200 px-4 py-2 rounded'
-                    placeholder='Add your issue tag here'
-                    value={tag}
-                    onChangeText={text => setTag(text)}
-                />
-                <TouchableOpacity disabled={tag === ''} activeOpacity={0.9} onPress={() => setTags([...tags, tag])} className='p-2 bg-[#2DABB1] rounded'>
-                  <AntDesign name="plus" size={24} color="white" />
-                </TouchableOpacity>
-              </View>
-            </View> */}
-
-            
+            />            
 
             <TouchableOpacity activeOpacity={0.9} disabled={isRaiseIssueLoading} onPress={() => createIssue()} className='flex-row space-x-2 items-center bg-[#2DABB1] self-start px-4 py-2 rounded-full mt-2'>
                 <Text className='text-white font-semibold'>{isRaiseIssueLoading ? 'Please wait...' : 'Raise Issue'}</Text>

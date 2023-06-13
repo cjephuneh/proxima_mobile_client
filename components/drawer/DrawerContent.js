@@ -8,18 +8,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const DrawerContent = (props) => {
     const dispatch = useDispatch()
-    const navigation = useNavigation()
     const [user, setUser] = useState(null)
 
-    // dispatch the logout reducer which set the user to null
-    // remove user info from local storage
-    // current closing drawer and redirecting to login manually
-    // TODO: Try and find a fix to force the MainStackNav to rerender on user state change
     const handleLogout = async () => {
         await removeInfo()
         dispatch(logout())
-        // props.navigation.closeDrawer()
-        // navigation.replace('login')
     }
 
     // remove user info from local storage
@@ -45,7 +38,6 @@ const DrawerContent = (props) => {
     const setUserInfo = async () => {
       let userInfo = await getInfo()
       setUser(userInfo)
-      // console.log('user info ', userInfo)
     }
 
     // run the setUserinfo function once on page load

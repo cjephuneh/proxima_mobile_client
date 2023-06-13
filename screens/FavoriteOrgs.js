@@ -11,58 +11,12 @@ const FavoriteOrgs = () => {
 
     const { user } = useSelector((state) => state.auth)
 
-    const data = [
-        {
-            title: '18th Street Brewery',
-            location: 'Dakley Avenue, Hammond, IN'
-        },
-        {
-            title: '16th Street',
-            location: 'Brooklyn, NY'
-        },
-        {
-            title: '169th Street',
-            location: 'Brooklyn, NY'
-        },
-        {
-            title: '18th Street Brewery',
-            location: 'Dakley Avenue, Hammond, IN'
-        },
-        {
-            title: '16th Street',
-            location: 'Brooklyn, NY'
-        },
-        {
-            title: '169th Street',
-            location: 'Brooklyn, NY'
-        },
-        
-    ]
-
     // fetch data from store
     const { favoritecommunities, isFavoriteCommunitiesLoading, isFavoriteCommunitiesSuccess } = useSelector((state) => state.community)
 
     const [availableCommunities, setCommunities] = useState([])
     const [searchWord, setSearchWord] = useState('')
 
-    // enable user to search through the list of available communities
-    // const searchFilterFunction = (text) => {
-    //     if (!text) {
-    //         setSearchWord(text);
-    //         setCommunities(favoritecommunities); // Reset to original communities when the search field is empty
-    //         return;
-    //     }
-    
-    //     const newData = availableCommunities.filter((item) => {
-    //         const itemData = item.tenant_id.tenant_name ? item.tenant_id.tenant_name.toLowerCase() : '';
-    //         const searchData = text.toLowerCase();
-    
-    //         return itemData.indexOf(searchData) > -1;
-    //     });
-    
-    //     setCommunities(newData);
-    //     setSearchWord(text);
-    // };
     const filteredOrgs = availableCommunities?.filter(item =>
         item.tenant_id.tenant_name.toLowerCase().includes(searchWord.toLowerCase())
       )
@@ -127,29 +81,6 @@ const FavoriteOrgs = () => {
                     <Text className='text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No favorite communities found</Text>
                 )
             }
-        {/* {
-            companies.length > 0 ?
-
-            companies.map((chat,i) => (
-                <TouchableOpacity testID='org-btn' key={i} onPress={() => navigation.navigate('companyProfile')}>
-                    <View
-                        className='flex-row justify-between'
-                    >
-                        <View className='flex-row space-x-3 items-center'>
-                            <Octicons name="organization" size={24} color="black" />
-                            <View>
-                                <Text>{chat.title}</Text>
-                                <Text className='text-gray-500 text-sm'>{chat.location}</Text>
-                            </View>
-                        </View>
-                        <AntDesign name="star" size={24} color="black" />
-                    </View>
-                </TouchableOpacity>
-            )) :
-
-            <Text className='text-sm bg-gray-300 p-2 rounded font-semibold italic'>Sorry, this company does not exist in your favorites list.</Text>
-        } */}
-
       </ScrollView>
     </SafeAreaView>
   )

@@ -20,29 +20,6 @@ const Inbox = () => {
     const [availableChats, setChats] = useState([])
     const [searchChat, setSearchChat] = useState('')
 
-    // const searchFilterFunction = (text) => {
-    //   // setSearchChat(text);
-    //   console.log(text)
-    //   // if(!text) {
-    //   //   setSearchChat(text);
-    //   //   setChats(chats) // Reset to original communities when the search field is empty
-    //   //   return
-    //   // }
-      
-
-    //   const newData = availableChats.filter(item => {
-    //     const tenantName = item.tenant_id.tenant_name ? item.tenant_id.tenant_name.toLowerCase() : ''
-    //     const searchData = text.toLowerCase()
-
-    //     console.log(tenantName)
-
-    //     return tenantName.indexOf(searchData) > -1
-    //   })
-    //   console.log(newData)
-
-    //   setChats(newData)
-    //   setSearchChat(text)
-    // }
     const filteredChats = availableChats.filter(item =>
       item.tenant_id.tenant_name.toLowerCase().includes(searchChat.toLowerCase())
     )
@@ -76,22 +53,16 @@ const Inbox = () => {
             testID='profile-pic'
             className='h-10 w-10 border-2 border-gray-200 rounded-full justify-center items-center'
         >
-            {/* <Image source={require('../assets/user.png')} /> */}
             <FontAwesome5 name="user-alt" size={20} color="black" />
         </TouchableOpacity>
       </View>
 
       <View className='flex-row items-center justify-between mt-3'>
         <Text className='text-2xl font-bold'>Inbox</Text>
-        {/* <Text className='text-xl font-bold bg-[#2DABB1] text-white px-6 py-1 text-center rounded-full'>Chat</Text> */}
       </View>
 
       <ScrollView className='space-y-3 flex-1' showsVerticalScrollIndicator={false}>
         <View className='space-y-3'>
-          {/* <Text className='mt-4 mb-2 font-bold text-lg'>
-            Unread - 
-          <Text testID='unread-chats-count'>{data.filter(dt => dt.read === false).length}</Text>
-          </Text> */}
           <View testID='unread-chats' className='space-y-4 mt-3'>
           {
             isChatsLoading ? <Text>Chats loading...</Text> :
@@ -105,14 +76,10 @@ const Inbox = () => {
                     className='flex-row space-x-2 items-center'
                     testID='open-chat'
                 >
-                    {/* <Image source={require('../assets/user.png')} /> */}
                     <Octicons name="organization" size={24} color="#2DABB1" />
                     <View className='flex-1'>
                         <Text className='font-semibold'>{chat.tenant_id.tenant_name}</Text>
-                        {/* <Text className='font-bold'>{message.subject}</Text> */}
-                        {/* <Text>{message.message.length > 30 ? message.message.slice(0, 30)+'...' : message.message}</Text> */}
                     </View>
-                    {/* <Text>{message.time}</Text> */}
                 </TouchableOpacity>
             )) :
             <Text className='text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No chats available</Text>

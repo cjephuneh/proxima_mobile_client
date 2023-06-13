@@ -15,11 +15,9 @@ export default function Surveys(){
     // retrieve data from the store
     const { communitysurveys, isCommunitySurveysLoading, isCommunitySurveysSuccess, isCommunitySurveysError, isCommunitySurveysMessage } = useSelector((state) => state.community)
 
-    // console.log('surveys',  communitysurveys, isCommunitySurveysSuccess)
 
     // retrieve community surveys
     useEffect(() => {
-        // TODO => replace 1 with a dynamic community_id
         community_id && dispatch(retrieveCommunitySurveys({ tenant_id: community_id}))
     }, [])
     return (
@@ -31,8 +29,6 @@ export default function Surveys(){
                     <TextInput
                         className='flex-1'
                         placeholder='Search Surveys'
-                        // value={searchWord}
-                        // onChangeText={(text) => searchFilterFunction(text)}
                     />
                 </View>
                 <TouchableOpacity

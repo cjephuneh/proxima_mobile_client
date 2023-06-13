@@ -2,7 +2,6 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import DrawerNav from './DrawerNav';
-import OnBoarding from '../screens/OnBoarding';
 import Login from '../screens/Login';
 import Multistep from '../screens/Multistep';
 

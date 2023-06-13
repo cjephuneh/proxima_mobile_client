@@ -16,24 +16,6 @@ const Communities = () => {
     const [availableCommunities, setCommunities] = useState([])
     const [searchWord, setSearchWord] = useState('')
 
-    // enable user to search through the list of available communities
-    // const searchFilterFunction = (text) => {
-    //     if (!text) {
-    //         setSearchWord(text);
-    //         setCommunities(communities); // Reset to original communities when the search field is empty
-    //         return;
-    //     }
-    
-    //     const newData = availableCommunities.filter((item) => {
-    //         const itemData = item.tenant_id.tenant_name ? item.tenant_id.tenant_name.toLowerCase() : '';
-    //         const searchData = text.toLowerCase();
-    
-    //         return itemData.indexOf(searchData) > -1;
-    //     });
-    
-    //     setCommunities(newData);
-    //     setSearchWord(text);
-    // };
     const filteredOrgs = availableCommunities?.filter(item =>
         item.tenant_id.tenant_name.toLowerCase().includes(searchWord.toLowerCase())
       )
@@ -90,7 +72,6 @@ const Communities = () => {
             }))
         }
 
-        // dispatch(resetAddOrRemoveFromFavs())
     }, [isAddToFavsLoading, addtofavorites, isAddToFavsSuccess, isAddToFavsError, isAddToFavsMessage, dispatch])
 
   return (
