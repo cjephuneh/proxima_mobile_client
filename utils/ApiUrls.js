@@ -15,6 +15,7 @@ export const ApiUrls =  {
     // chats
     retrieve_chats: CHAT_ENDPOINT + '/chat/',
     retrieve_messages: CHAT_ENDPOINT + '/message/',
+    voice: CHAT_ENDPOINT + '/voice/',
 
     // community
     retrieve_communities: COMMUNITY_ENDPOINT + '/community/',
@@ -29,4 +30,5 @@ export const ApiUrls =  {
 
     // survey
     retrieve_surveys: SURVEY_ENDPOINT + '/survey/',
+    survey_response: SURVEY_ENDPOINT + '/response/'
 }

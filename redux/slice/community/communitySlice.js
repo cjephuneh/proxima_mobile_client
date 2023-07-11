@@ -16,6 +16,7 @@ const initialState = {
     joincommunity: null,
     leavecommunity: null,
     addtofavorites: null,
+    surveyresponse: null,
 
     // communities
     isCommunitiesLoading: false,
@@ -100,6 +101,14 @@ const initialState = {
     isAddToFavsSuccess: false,
     isAddToFavsError: true,
     isAddToFavsMessage: '',
+
+    // survy response
+    isSurveyResponseLoading: false,
+    isSurveyResponseSuccess: false,
+    isSurveyResponseError: false,
+    isSurveyResponseMessage: '',
+
+
 }
 
 // retrieve all communities
@@ -266,6 +275,23 @@ export const addOrRemoveFromFavs = createAsyncThunk('community/favs', async (com
     }
 })
 
+// save survey response
+export const saveSurveyResponse = createAsyncThunk('community/response', async (responseData, thunkAPI) => {
+    try {
+        const response = await communityService.submitSurveyResponse(responseData)
+
+        if(response.error){
+            return thunkAPI.rejectWithValue(response.error)
+        }
+
+        return response
+    } catch (error) {
+        console.error(error)
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 
 const communitySlice = createSlice({
     name: 'community',
@@ -304,6 +330,11 @@ const communitySlice = createSlice({
             state.isAddToFavsError = false,
             state.isAddToFavsMessage = ''
             state.isAddToFavsSuccess = false
+        },
+        resetSurveyResponseState: (state) => {
+            state.isSurveyResponseError = false,
+            state.isSurveyResponseSuccess = false,
+            state.isSurveyResponseMessage = ''
         }
     }, 
     extraReducers: (builder) => 
@@ -517,8 +548,23 @@ const communitySlice = createSlice({
                 state.isAddToFavsMessage = action.payload,
                 state.addtofavorites = null
             })
+
+            .addCase(saveSurveyResponse.pending, (state) => {
+                state.isSurveyResponseLoading = true
+            })
+            .addCase(saveSurveyResponse.fulfilled, (state, action) => {
+                state.isSurveyResponseLoading = false,
+                state.isSurveyResponseSuccess = true,
+                state.surveyresponse = action.payload
+            })
+            .addCase(saveSurveyResponse.rejected, (state, action) => {
+                state.isSurveyResponseLoading = false,
+                state.isSurveyResponseError = true,
+                state.isSurveyResponseMessage = action.payload,
+                state.surveyresponse = null
+            })
 })
 
-export const { resetThreadState, resetThreadCommentsState, resetIssueStatus, resetJoinCommunityState, resetLeaveCommunityState, resetAddOrRemoveFromFavs } = communitySlice.actions
+export const { resetThreadState, resetThreadCommentsState, resetIssueStatus, resetJoinCommunityState, resetLeaveCommunityState, resetAddOrRemoveFromFavs, resetSurveyResponseState } = communitySlice.actions
 
 export default communitySlice.reducer

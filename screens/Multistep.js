@@ -91,7 +91,7 @@ export const Email = () => {
 
             <Formik
                 validationSchema={emailValidationSchema}
-                initialValues={{email: 'k@e.com'}}
+                initialValues={{email: ''}}
                 onSubmit={submitEmail}
             >
                 {
@@ -220,7 +220,7 @@ export const SetPassword = () => {
             <Text className='mt-3 text-xl font-bold'>Set a password</Text>
 
             <Formik
-                initialValues={{password: '12345678'}}
+                initialValues={{password: ''}}
                 validationSchema={passwordValidationSchema}
                 onSubmit={submitPassword}
             >
@@ -256,7 +256,7 @@ export const ConfirmPassword = () => {
     const password = useSelector(state => state.auth.password)
     
 
-    const [confirmPassword, setConfirmPassword] = useState('12345678')
+    const [confirmPassword, setConfirmPassword] = useState('')
 
     // handle form validation
     const [validationStyles, setValidationStyles] = useState('mt-2 ml-2 text-sm text-red-600 hidden')
@@ -412,7 +412,7 @@ export const SetProfile = () => {
 
                 <Text className='mt-3 text-xl font-bold'>Finish setting up your profile</Text>
                 <Formik
-                    initialValues={{username: 'kimtest1', firstName: 'Kim', lastName: 'Test', gender: selectedGender, dateOfBirth: '2022-12-12', phoneNumber: '254712345678'}}
+                    initialValues={{username: '', firstName: '', lastName: '', gender: selectedGender, dateOfBirth: '', phoneNumber: ''}}
                     validationSchema={profileValidationSchema}
                     onSubmit={submitProfile}
                 >

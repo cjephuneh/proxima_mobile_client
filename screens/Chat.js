@@ -1,10 +1,13 @@
-import { View, Text, SafeAreaView, KeyboardAvoidingView, ScrollView, TextInput, TouchableOpacity, Keyboard } from 'react-native'
+import { View, Text, SafeAreaView, KeyboardAvoidingView, ScrollView, TextInput, TouchableOpacity, Keyboard, ProgressBarAndroidBase, Modal } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Audio } from 'expo-av';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveMessages, sendMessage } from '../redux/slice/chat/chatSlice';
+import { Slider } from '@miblanchard/react-native-slider'
+import { ApiUrls } from '../utils/ApiUrls';
+import axios from 'axios';
 
 const Chat = () => {
     const navigation = useNavigation()
@@ -24,20 +27,28 @@ const Chat = () => {
 
     const [message, setMessage] = useState(null)
     const [recording, setRecording] = useState();
-    // const [sound, setSound] = useState()
     const [recordingPaused, setRecordingPaused] = useState(false)
+
+    const [soundURI, setSoundURI] = useState(null)
+
+    const [recordingDuration, setRecordingDuration] = useState(0);
+    const [timerIntervalId, setTimerIntervalId] = useState(null);
+
+    function formatDuration(duration) {
+      const minutes = Math.floor(duration / 60);
+      const seconds = duration % 60;
+      const formattedMinutes = String(minutes).padStart(2, '0');
+      const formattedSeconds = String(seconds).padStart(2, '0');
+      return `${formattedMinutes}:${formattedSeconds}`;
+    }
+    
 
     const scrollViewRef = useRef();
 
     // send a message
     const sendClientMessage = () => {
       let trimmedMessage = message.trim()
-      // setMessages([...messages, {
-      //     message: trimmedMessage,
-      //     sender: 'Me',
-      //     typing: false
-      // }])
-      // setMessage(null)
+
       if(trimmedMessage.length === 0) return
 
       dispatch(sendMessage({
@@ -53,56 +64,181 @@ const Chat = () => {
       setMessage(null)
     }
 
-    async function startRecording(){
-        try {
-            console.log('Requesting permissions...')
-            await Audio.requestPermissionsAsync()
-            await Audio.setAudioModeAsync({
-                allowsRecordingIOS: true,
-                playsInSilentModeIOS: true
-            })
-            console.log('starting recording')
-            const recording = new Audio.Recording()
-            await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY)
-            await recording.startAsync(); 
-            setRecording(recording);
-            console.log('Recording started');
-        } catch (error) {
-            console.error('Failed to start recording', err);
-        }
-    }
+    const submitVoiceContent = async () => {
+      let uri = await stopRecording();
+      const filename = uri.split('/').pop();
+      const filetype = uri.split('.').pop();
+      
+      const formData = new FormData();
+      const file = {
+        uri,
+        type: `audio/${filetype}`,
+        name: filename,
+      };
+      formData.append('audio', file);
+      
+      console.log(formData._parts);
+      
+      
+      fetch('http://192.168.1.18:3000/api/chat/voice', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data; boundary=---------------------------1234567890123456789012345678',
+        },
+        body: formData,
+      })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error));
+    };
+    
 
-    async function playSound(uri) {
-        console.log('Loading Sound');
-        const soundObject = new Audio.Sound();
-        try {
-          await soundObject.loadAsync({ uri });
-          await soundObject.playAsync();
-          setRecordingPaused(false)
-          console.log('Playing Sound');
-          console.log('Playing complete')
-        } catch (error) {
-          console.error('Failed to play sound', error);
-        }
+    // async function startRecording(){
+    //     try {
+    //         console.log('Requesting permissions...')
+    //         await Audio.requestPermissionsAsync()
+    //         await Audio.setAudioModeAsync({
+    //             allowsRecordingIOS: true,
+    //             playsInSilentModeIOS: true
+    //         })
+    //         console.log('starting recording')
+    //         const recording = new Audio.Recording()
+    //         await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY)
+    //         await recording.startAsync(); 
+    //         setRecording(recording);
+    //         console.log('Recording started');
+    //     } catch (error) {
+    //         console.error('Failed to start recording', error);
+    //     }
+    // }
+    async function startRecording() {
+      try {
+        console.log('Requesting permissions...');
+        await Audio.requestPermissionsAsync();
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: true,
+          playsInSilentModeIOS: true,
+        });
+    
+        console.log('Starting recording');
+        // const recording = new Audio.Recording();
+        // await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
+        // await recording.startAsync();
+        const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY)
+        setRecording(recording);
+        setRecordingDuration(0); // Reset recording duration
+        setTimerIntervalId(setInterval(() => {
+          setRecordingDuration(prevDuration => prevDuration + 1);
+        }, 1000)); // Update every second
+    
+        console.log('Recording started');
+      } catch (error) {
+        console.error('Failed to start recording', error);
       }
+    }
+    
+
+    // async function playSound(uri) {
+    //     console.log('Loading Sound');
+    //     const soundObject = new Audio.Sound();
+    //     try {
+    //       await soundObject.loadAsync({ uri });
+    //       await soundObject.playAsync();
+    //       setRecordingPaused(false)
+    //       console.log('Playing Sound');
+    //       console.log('Playing complete')
+    //     } catch (error) {
+    //       console.error('Failed to play sound', error);
+    //     }
+    //   }
+    async function playSound(uri) {
+      console.log('Loading Sound');
+      const soundObject = new Audio.Sound();
+      try {
+        await soundObject.loadAsync({ uri });
+        const status = await soundObject.getStatusAsync();
+        if (status.isLoaded) {
+          // setDuration(status.durationMillis);
+          // soundObject.setOnPlaybackStatusUpdate((status) => {
+          //   if (status.isLoaded && status.isPlaying) {
+          //     setPosition(status.positionMillis);
+          //   }
+          // });
+          await soundObject.playAsync();
+          setRecordingPaused(false);
+          console.log('Playing Sound');
+          console.log('Playing complete');
+        } else {
+          console.log('Sound is not loaded');
+        }
+      } catch (error) {
+        console.error('Failed to play sound', error);
+      }
+    }
+    
+    
+    
 
     async function stopRecording() {
         console.log('Stopping recording..');
         setRecording(undefined);
         await recording.stopAndUnloadAsync();
         const uri = recording.getURI(); 
+        setSoundURI(uri)
         setRecordingPaused(false)
+        clearInterval(timerIntervalId)
+        setRecordingDuration(0)
         console.log('Recording stopped and stored at', uri);
-        playSound(uri)
+        // playSound(uri)
+        return uri
     }
 
+    // const cancelRecording = async () => {
+    //   if (recording) {
+    //     try {
+    //       console.log('Cancelling recording...');
+    //       await recording.stopAndUnloadAsync();
+    //       setRecording(undefined);
+    //       setRecordingPaused(false)
+    //       console.log('Recording cancelled');
+    //     } catch (error) {
+    //       console.error('Failed to cancel recording', error);
+    //     }
+    //   } else {
+    //     console.log('No active recording to cancel');
+    //   }
+    // };
+    const cancelRecording = async () => {
+      if (recording) {
+        try {
+          console.log('Cancelling recording...');
+          await recording.stopAndUnloadAsync();
+          setRecording(undefined);
+          setRecordingPaused(false);
+          clearInterval(timerIntervalId); // Clear the timer interval
+          setTimerIntervalId(null); // Reset the timer interval ID
+          console.log('Recording cancelled');
+        } catch (error) {
+          console.error('Failed to cancel recording', error);
+        }
+      } else {
+        console.log('No active recording to cancel');
+      }
+    };
+    
+    useEffect(() => {
+      console.log(recordingDuration)
+    }, [recordingDuration])
+
     async function pauseAudio() {
-        if (recording && recording.getStatusAsync) {
+        if (recording) {
           try {
             const status = await recording.getStatusAsync();
             if (status.isRecording) {
               await recording.pauseAsync();
               setRecordingPaused(true)
+              clearInterval(timerIntervalId); // Clear the timer interval
               console.log('Recording paused');
             } else {
               console.log('No active recording to pause');
@@ -119,11 +255,14 @@ const Chat = () => {
         if (recording && recording.getStatusAsync) {
           try {
             const status = await recording.getStatusAsync();
-            console.log(status)
-            console.log(recording)
+            // console.log(status)
+            // console.log('recording', recording)
             if (status.canRecord) {
               await recording.startAsync();
               setRecordingPaused(false)
+              setTimerIntervalId(setInterval(() => {
+                setRecordingDuration(prevDuration => prevDuration + 1);
+              }, 1000)); // Update every second
               console.log('Recording resumed');
             } else {
               console.log('Recording is not paused');
@@ -149,15 +288,6 @@ const Chat = () => {
           };
 
     }, [scrollViewRef])
-
-    // useEffect(() => {
-    //     return sound
-    //       ? () => {
-    //           console.log('Unloading Sound');
-    //           sound.unloadAsync();
-    //         }
-    //       : undefined;
-    //   }, [sound]);
 
   return (
     <SafeAreaView className='flex-1 bg-white pt-8 px-3 relative'>
@@ -195,48 +325,68 @@ const Chat = () => {
         
         </ScrollView>
         { !recording ?
-        <View className='my-4 flex-row items-end'>
-           <View className='flex-row flex-1 items-center border border-gray-300 px-4 py-2 rounded-md'>
-            <TextInput
-                    placeholder='Type your message'
-                    className='flex-1'
-                    multiline
-                    value={message}
-                    onChangeText={text => setMessage(text)}
-                    style={{
-                        maxHeight: 90,
-                        height: 'auto'
-                    }}
-                    testID='message-input'
-                />
-                <TouchableOpacity activeOpacity={0.9}  onPress={recording ? stopRecording : startRecording} className={message ? 'hidden' : 'pl-2'}>
-                    <FontAwesome name="microphone" size={24} color="#2DABB1" />
-                </TouchableOpacity>
-           </View>
-           <TouchableOpacity testID='send-btn' activeOpacity={0.9} disabled={!message} onPress={() => sendClientMessage()} className='px-2 py-1 mb-2'>
-                <FontAwesome name="send" size={24} color="#2DABB1" />
-           </TouchableOpacity>
-        </View> :
-        <View className='my-4 flex-row justify-between'>
-            <TouchableOpacity onPress={() => stopRecording()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
-                <MaterialCommunityIcons name="delete" size={24} color="red" />
-            </TouchableOpacity>            
-            {
-              recordingPaused ?
+          <View className='my-4 flex-row items-end'>
+            <View className='flex-row flex-1 items-center border border-gray-300 px-4 py-2 rounded-md'>
+              <TextInput
+                      placeholder='Type your message'
+                      className='flex-1'
+                      multiline
+                      value={message}
+                      onChangeText={text => setMessage(text)}
+                      style={{
+                          maxHeight: 90,
+                          height: 'auto'
+                      }}
+                      testID='message-input'
+                  />
+                  <TouchableOpacity activeOpacity={0.9}  onPress={startRecording} className={message ? 'hidden' : 'pl-2'}>
+                      <FontAwesome name="microphone" size={24} color="#2DABB1" />
+                  </TouchableOpacity>
+            </View>
+            <TouchableOpacity testID='send-btn' activeOpacity={0.9} disabled={!message} onPress={() => sendClientMessage()} className='px-2 py-1 mb-2'>
+                  <FontAwesome name="send" size={24} color="#2DABB1" />
+            </TouchableOpacity>
+          </View> :
+          <View className='p-2 rounded border border-gray-100'>
+                {
+                  recordingPaused ? (
+                    <View className='flex-row items-center'>
+                      <Text className='text-sm text-red-500 text-center'>
+                        {`${String(Math.floor(recordingDuration / 60)).padStart(2, '0')}:${String(recordingDuration % 60).padStart(2, '0')}`}  
+                      </Text>
+                      <Text className='text-sm text-[#2DABB1] text-center flex-1 -ml-8'>Paused</Text>
+                    </View>
+                  ) : (
+                    <View className='flex-row items-center '>
+                      <Text className='text-sm text-red-500 text-center'>
+                      {`${String(Math.floor(recordingDuration / 60)).padStart(2, '0')}:${String(recordingDuration % 60).padStart(2, '0')}`}  
+                      </Text>
+                      <Text className='text-sm text-[#2DABB1] text-center flex-1 -ml-8 animate-pulse'>Recording...</Text>
+                    </View>
+                  )
+                }
 
-              <TouchableOpacity onPress={() => resumeAudio()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
-                <FontAwesome name="microphone" size={24} color="#2DABB1" />
-              </TouchableOpacity> : 
+                <View className='my-4 flex-row justify-between'>
+                  <TouchableOpacity onPress={() => cancelRecording()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
+                      <MaterialCommunityIcons name="delete" size={24} color="red" />
+                  </TouchableOpacity>            
+                  {
+                    recordingPaused ?
 
-              <TouchableOpacity onPress={() => pauseAudio()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
-                <Ionicons name="ios-pause" size={24} color="black" />
-              </TouchableOpacity>
-            }
+                    <TouchableOpacity onPress={() => resumeAudio()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
+                      <FontAwesome name="microphone" size={24} color="#2DABB1" />
+                    </TouchableOpacity> : 
 
-            <TouchableOpacity activeOpacity={0.9} className='px-2 py-1 mb-2'>
-                <FontAwesome name="send" size={24} color="#2DABB1" />
-           </TouchableOpacity>
-        </View>
+                    <TouchableOpacity onPress={() => pauseAudio()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
+                      <Ionicons name="ios-pause" size={24} color="black" />
+                    </TouchableOpacity>
+                  }
+
+                  <TouchableOpacity activeOpacity={0.9} onPress={() => submitVoiceContent()} className='px-2 py-1 mb-2'>
+                      <FontAwesome name="send" size={24} color="#2DABB1" />
+                  </TouchableOpacity>
+                </View>
+            </View>
 }
       </KeyboardAvoidingView>
     </SafeAreaView>

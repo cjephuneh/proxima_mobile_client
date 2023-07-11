@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign, EvilIcons, MaterialIcons, Octicons } from '@expo/vector-icons'
+import { AntDesign, EvilIcons, FontAwesome5, MaterialIcons, Octicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { retrieveFavoriteCommunities } from '../redux/slice/community/communitySlice'
@@ -42,20 +42,23 @@ const FavoriteOrgs = () => {
             <EvilIcons name="search" size={24} color="black" />
             <TextInput
                 className='flex-1'
-                placeholder='Search your favorite organization'
+                placeholder='Search your favorite community'
                 value={searchWord}
                 onChangeText={(text) => setSearchWord(text)}
             />
         </View>
-    <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.openDrawer()}
-    >
-    </TouchableOpacity>
+        <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.openDrawer()}
+            testID='profile-pic'
+            className='h-10 w-10 border-2 border-[#2DABB1] rounded-full justify-center items-center'
+        >
+            <FontAwesome5 name="user-alt" size={20} color="#2DABB1" />
+        </TouchableOpacity>
     </View>
       
-      <Text className='text-2xl font-bold mt-2'>Favorite Organizations</Text>
-      <Text>Explore your favorite organizations</Text>
+      <Text className='text-2xl font-bold mt-2'>Favorite Communities</Text>
+      <Text>Explore your favorite communities</Text>
 
       <ScrollView className='mt-4 space-y-3'>
             {   isFavoriteCommunitiesLoading ?
@@ -69,7 +72,7 @@ const FavoriteOrgs = () => {
                             <View
                                 className='flex-row space-x-3 items-center'
                             >
-                                <MaterialIcons name="groups" size={24} color="black" />
+                                <MaterialIcons name="groups" size={24} color="#2DABB1" />
                                 <View>
                                     <Text>{community.tenant_id.tenant_name}</Text>
                                     <Text className='text-gray-500 text-sm'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>

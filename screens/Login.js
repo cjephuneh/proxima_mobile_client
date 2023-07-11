@@ -51,7 +51,7 @@ const Login = ({ navigation }) => {
       <KeyboardAvoidingView behavior='padding' className='justify-between py-8'>
         <Formik
           validationSchema={loginValidationSchema}
-          initialValues={{email: 'k@e.com', password: '12345678'}}
+          initialValues={{email: '', password: ''}}
           onSubmit={handleLogin}
         >
           {

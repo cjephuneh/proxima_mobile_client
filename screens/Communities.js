@@ -91,10 +91,9 @@ const Communities = () => {
             activeOpacity={0.9}
             onPress={() => navigation.openDrawer()}
             testID='profile-pic'
-            className='h-10 w-10 border-2 border-gray-200 rounded-full justify-center items-center'
+            className='h-10 w-10 border-2 border-[#2DABB1] rounded-full justify-center items-center'
         >
-            {/* <Image source={require('../assets/user.png')} /> */}
-            <FontAwesome5 name="user-alt" size={20} color="black" />
+            <FontAwesome5 name="user-alt" size={20} color="#2DABB1" />
         </TouchableOpacity>
     </View>
       
@@ -107,7 +106,8 @@ const Communities = () => {
                     filteredOrgs.map((community,i) => (
                         <View key={i} className='flex-row items-center'>
                             <TouchableOpacity testID='community-btn' className='flex-1' onPress={() => navigation.navigate('community', {
-                                community_id: community.community_id
+                                community_id: community.community_id,
+                                tenant_id: community.tenant_id.tenant_id
                             })}>
                                 <View
                                     className='flex-row space-x-3 items-center'

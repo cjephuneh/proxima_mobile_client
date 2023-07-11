@@ -172,10 +172,22 @@ const leaveCommunity = async (communityData) => {
     }
 }
 
+const submitSurveyResponse = async (responseData) => {
+    try {
+        const { data } = await axios.post(ApiUrls.survey_response, responseData)
 
+        if(data.message){
+            return { error: data.message.error }
+        }
+
+        return data
+    } catch (error) {
+        throw error
+    }
+}
 
 const communityService = {
-    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities, toggleFavoriteCommunities, joinCommunity, leaveCommunity
+    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities, toggleFavoriteCommunities, joinCommunity, leaveCommunity, submitSurveyResponse
 }
 
 export default communityService

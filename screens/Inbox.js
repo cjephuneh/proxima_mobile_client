@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { EvilIcons, FontAwesome5, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
+import { AntDesign, EvilIcons, FontAwesome5, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveChats } from '../redux/slice/chat/chatSlice';
@@ -36,7 +36,7 @@ const Inbox = () => {
   }, [isChatsSuccess, chats])
 
   return (
-    <SafeAreaView className='pt-8 flex-1 bg-white px-3 relative'>
+    <SafeAreaView className='pt-8 flex-1 px-3 relative'>
       <ChatCreateModal showModal={showModal} setShowModal={setShowModal} />
       <View className='flex-row space-x-3 items-center'>
         <View className='flex-row bg-gray-200 rounded-lg px-2 space-x-3 py-2 items-center flex-1'>
@@ -51,9 +51,9 @@ const Inbox = () => {
             activeOpacity={0.9}
             onPress={() => navigation.openDrawer()}
             testID='profile-pic'
-            className='h-10 w-10 border-2 border-gray-200 rounded-full justify-center items-center'
+            className='h-10 w-10 border-2 border-[#2DABB1] rounded-full justify-center items-center'
         >
-            <FontAwesome5 name="user-alt" size={20} color="black" />
+            <FontAwesome5 name="user-alt" size={20} color="#2DABB1" />
         </TouchableOpacity>
       </View>
 
@@ -76,7 +76,7 @@ const Inbox = () => {
                     className='flex-row space-x-2 items-center'
                     testID='open-chat'
                 >
-                    <Octicons name="organization" size={24} color="#2DABB1" />
+                    <AntDesign name="message1" size={20} color="#2DABB1" />
                     <View className='flex-1'>
                         <Text className='font-semibold'>{chat.tenant_id.tenant_name}</Text>
                     </View>

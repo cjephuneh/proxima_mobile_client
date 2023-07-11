@@ -45,8 +45,8 @@ const Home = () => {
             </TouchableOpacity>
         </View>
 
-        <View className='bg-white flex-1 px-3'>
-            <View className="my-6 flex-row justify-between">
+        <View className='bg-gray-50 flex-1'>
+            <View className="my-6 mx-3 flex-row justify-between">
                 <TouchableOpacity
                 activeOpacity={0.9} 
                 className='items-center justify-center'
@@ -80,13 +80,10 @@ const Home = () => {
             </View>
 
             <View className='mt-4 flex-1 justify-between'>
-                <View>
-                    <Text className='font-semibold text-lg text-gray-600'>Recent Chats</Text>
-                    <ScrollView>
-                        <View className='space-y-3'>
-                            <View testID='unread-chats' className='space-y-2 mt-3'>
+                    <Text className='mx-3 font-semibold text-lg text-gray-600'>Recent Chats</Text>
+                    <ScrollView className='mt-3'>
                                 {
-                                    isChatsLoading ? <Text>Recent chats loading...</Text> :
+                                    isChatsLoading ? <Text className='mx-3'>Recent chats loading...</Text> :
 
                                     ( isChatsSuccess && chats &&
                                     filteredChats.length > 0 ?
@@ -94,9 +91,9 @@ const Home = () => {
                                         <TouchableOpacity
                                             onPress={() => navigation.navigate('chat', { chat_id: chat.chat_id })} 
                                             key={chat.chat_id}
-                                            className='flex-row space-x-2 items-center border rounded border-gray-100 px-3 py-3'
+                                            className='flex-row space-x-2 items-center rounded px-3 mx-3 py-3 bg-white mb-1'
                                             testID='open-chat'
-                                            style={{elevation: 2, shadowColor: 'white'}}
+                                            style={{elevation: 2, shadowColor: '#52006A'}}
                                         >
                                             <AntDesign name="message1" size={20} color="#2DABB1" />
                                             <View className='flex-1'>
@@ -104,18 +101,14 @@ const Home = () => {
                                             </View>
                                         </TouchableOpacity>
                                     )) :
-                                    <Text className='text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No recent chats available</Text>
+                                    <Text className='mx-3 text-sm bg-[#2DABB1] text-white text-center p-2 rounded font-semibold italic'>No recent chats available</Text>
                                     )
                                 }
-                            </View>
-                        </View>
                     </ScrollView>
-                </View>
-
-                <TouchableOpacity activeOpacity={0.9} className='mb-12 rounded-full bg-[#2DABB1] px-4 py-3' onPress={() => navigation.navigate('createIssue')}>
+                <TouchableOpacity activeOpacity={0.9} className='mx-3 mb-12 rounded-full bg-[#2DABB1] px-4 py-3' onPress={() => navigation.navigate('createIssue')}>
                     <Text className='text-center font-semibold text-white'>Add an Instant Issue</Text>
                 </TouchableOpacity>
-                </View>
+            </View>
         </View>
     </SafeAreaView>
   )

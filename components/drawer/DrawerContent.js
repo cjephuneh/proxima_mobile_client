@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/slice/auth/authSlice' 
 import { useNavigation } from '@react-navigation/native'
-import { MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const DrawerContent = (props) => {
@@ -50,10 +50,9 @@ const DrawerContent = (props) => {
       <View>
         <Text className='text-lg font-bold  text-center'>My Profile</Text>
         <View className='items-center mt-4'>
-          <Image source={require('../../assets/user.png')} className='w-16 h-16' resizeMode='contain' />  
-          <TouchableOpacity activeOpacity={0.9} className='mt-2 bg-[#EBFEFF] px-4 py-1 rounded'>
-            <Text className='text-[#2DABB1]'>Change profile picture</Text>
-          </TouchableOpacity>
+          <View className='w-14 h-14 rounded-full border-2 border-[#2DABB1] items-center justify-center'>
+            <FontAwesome name="user" size={32} color="#2DABB1" />
+          </View>
         </View>
 
         <View className='space-y-3 mt-6'>

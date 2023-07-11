@@ -36,7 +36,7 @@ const Community = () => {
   }, [])
 
   // extract community_id passed from previous screen
-  const { community_id } = route.params
+  const { community_id, tenant_id } = route.params
 
   // fetch community data from store
   const { community, isCommunityLoading } = useSelector((state) => state.community)
@@ -133,7 +133,7 @@ const Community = () => {
                         <Text className='font-semibold text-[#2DABB1]'>{community[0].members.length} members</Text>
                     </TouchableOpacity>
                 </View>
-                <View className='mt-4 flex-row justify-around'>
+                {/* <View className='mt-4 flex-row justify-around'>
                   <View className='items-center'>
                     <Text className='font-semibold'>Community Rating</Text>
                     <Text>4.65</Text>
@@ -142,9 +142,9 @@ const Community = () => {
                     <Text className='font-semibold'>Issues Resolved</Text>
                     <Text>56/100</Text>
                   </View>
-                </View>
+                </View> */}
 
-                <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('surveys', { community_id })} className='mt-8 items-center border border-[#2DABB1] rounded-full w-48 mx-auto py-2'>
+                <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('surveys', { community_id, tenant_id })} className='mt-8 items-center border border-[#2DABB1] rounded-full w-48 mx-auto py-2'>
                   <Text className='font-semibold text-[#2DABB1]'>Community Surveys</Text>
                 </TouchableOpacity>
                 
