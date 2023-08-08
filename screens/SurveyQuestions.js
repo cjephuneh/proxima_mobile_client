@@ -135,22 +135,22 @@ export default function SurveyQuestions(){
         dispatch(resetSurveyResponseState())
     }, [dispatch, navigation, surveyresponse, isSurveyResponseLoading, isSurveyResponseError, isSurveyResponseMessage, isSurveyResponseSuccess])
     return (
-        <SafeAreaView className='pt-8 px-3 flex-1'>
+        <SafeAreaView className='flex-1 px-3 pt-8'>
             
-            <View className='flex-1 items-center justify-center space-y-4'>
+            <View className='items-center justify-center flex-1 space-y-4'>
                 <View className='items-center'>
-                    <Text className='font-semibold text-xl'>{survey_topic}</Text>
-                    <Text className='text-sm text-gray-500 text-center'>{survey_description.length > 100 ? survey_description.slice(0, 100)+'...' : survey_description}</Text>
+                    <Text className='text-xl font-semibold'>{survey_topic}</Text>
+                    <Text className='text-sm text-center text-gray-500'>{survey_description.length > 100 ? survey_description.slice(0, 100)+'...' : survey_description}</Text>
                 </View>
                 {
                     isSurveyResponseLoading ? 
-                    <View className='relative h-80 w-full bg-white p-2 rounded items-center justify-center'>
+                    <View className='relative items-center justify-center w-full p-2 bg-white rounded h-80'>
                         <Animated.View style={{transform: [{ rotate: rotateInterpolation }]}}>
                             <AntDesign name="loading1" size={80} color="#2DABB1" style={{}} />
                         </Animated.View>
                     </View> :
                     <View 
-                        className='relative h-80 w-full bg-white p-2 rounded'
+                        className='relative w-full p-2 bg-white rounded h-80'
                         style={{elevation: 2, shadowColor: '#52006A'}}
                     >
                     <View className='flex-1 space-y-3'>
@@ -160,7 +160,7 @@ export default function SurveyQuestions(){
                                     placeholder='Type your answer'
                                     value={currentQuestionAnswer}
                                     onChangeText={text => setCurrentQuestionAnswer(text)}
-                                    className='border border-gray-200 rounded p-2 flex-1 mb-2'
+                                    className='flex-1 p-2 mb-2 border border-gray-200 rounded'
                                     multiline
                                     textAlignVertical="top"
                                     // style={{
@@ -177,7 +177,7 @@ export default function SurveyQuestions(){
                         activeOpacity={0.9} 
                         onPress={() => handleNextQuestion()} 
                         className='mb-6 bg-[#2DABB1] py-2 rounded-full'>
-                        <Text className='text-center font-semibold text-white'>{ currentQuestion+1 === surveyQuestions.length ? 'Complete' : 'Next'}</Text>
+                        <Text className='font-semibold text-center text-white'>{ currentQuestion+1 === surveyQuestions.length ? 'Complete' : 'Next'}</Text>
                     </TouchableOpacity>
                     </View>
                 }

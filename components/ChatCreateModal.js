@@ -20,12 +20,27 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
     const { chats } = useSelector((state) => state.chat)
 
     // filter communities to make sure the ones with created chats are not displayed
-    const communitiesToDisplay = communities?.filter(community => (
-        !chats?.some(cht => 
-            cht.tenant_id.tenant_id === community.tenant_id.tenant_id
-        )
-    ))
 
+    // console.log(communities)
+
+    // const communitiesToDisplay = communities?.filter(community => (
+    //     !chats?.some(cht => 
+    //         cht.tenant_id.tenant_id === community.tenant_id.tenant_id
+    //     )
+    // )) 
+    // console.log(communities);
+
+// Check if communities is an array, otherwise use an empty array as the default value
+const communitiesArray = Array.isArray(communities) ? communities : [];
+
+const communitiesToDisplay = communitiesArray.filter(community => (
+    !chats?.some(cht => 
+        cht.tenant_id.tenant_id === community.tenant_id.tenant_id
+    )
+));
+
+     
+     
     // 
     useEffect(() => {
         // fetch Communities
@@ -72,8 +87,8 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
     <Modal visible={showModal} animationType='slide' onRequestClose={() => setShowModal(!showModal)}>
         <View className='flex-1 bg-white'>
             {/* Nav */}
-            <View className='flex-row items-center border-b border-gray-200 p-2'>
-                <View className='flex-1 flex-row gap-4 items-center'>
+            <View className='flex-row items-center p-2 border-b border-gray-200'>
+                <View className='flex-row items-center flex-1 gap-4'>
                     <TouchableOpacity onPress={() => setShowModal(!showModal)}>
                         <Ionicons name="arrow-back" size={24} color="black" />
                     </TouchableOpacity>
@@ -111,12 +126,12 @@ const ChatCreateModal = ({ showModal, setShowModal}) => {
                         filteredOrgs.map((community,i) => (
                             <TouchableOpacity disabled={isChatLoading} testID='community-btn' key={i} onPress={() => createClientChat(community.tenant_id.tenant_id)}>
                                 <View
-                                    className='flex-row space-x-3 items-center'
+                                    className='flex-row items-center space-x-3'
                                 >
                                     <MaterialIcons name="groups" size={24} color="#2DABB1" />
                                     <View>
                                         <Text>{community.tenant_id.tenant_name}</Text>
-                                        <Text className='text-gray-500 text-xs'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
+                                        <Text className='text-xs text-gray-500'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>

@@ -99,7 +99,7 @@ const Issue = () => {
     }
 
   return (
-    <SafeAreaView className='pt-8 px-3 flex-1'>
+    <SafeAreaView className='flex-1 px-3 pt-8'>
       <Text className='text-xl font-bold'>
         {/* {issuethread && issuethread.length>0 && issuethread[0].issue.issue} */}
         {
@@ -122,7 +122,7 @@ const Issue = () => {
     </Text>
     
         {/* Issue */}
-      {/* <View className='flex-row space-x-4 items-center mt-4'>
+      {/* <View className='flex-row items-center mt-4 space-x-4'>
             <View className='flex-row'>
                 {
                     users.map((user, i) => (
@@ -145,7 +145,7 @@ const Issue = () => {
 
         {/* Replies */}
         <ScrollView 
-            className='flex-1 my-2 space-y-4 pl-2' 
+            className='flex-1 pl-2 my-2 space-y-4' 
             showsVerticalScrollIndicator={false}
             ref={scrollViewRef}
             testID='reply-section'
@@ -153,8 +153,8 @@ const Issue = () => {
             {
                 isThreadCommentsLoading ? <Text>Loading comments...</Text> :
                 threadcomments && [...threadcomments].sort((a, b) => a.comment_id - b.comment_id).map((comment, i) => (
-                    <View key={comment.comment_id} className='border border-gray-200 rounded p-2 '>
-                        <View className='flex-row space-x-2 items-center'>
+                    <View key={comment.comment_id} className='p-2 border border-gray-200 rounded '>
+                        <View className='flex-row items-center space-x-2'>
                             {/* <Image
                                 source={require('../assets/user.png')}
                              /> */}
@@ -164,7 +164,7 @@ const Issue = () => {
 
                         <Text className="mt-3">{comment.comment_description}</Text>
 
-                        <View className='flex-row space-x-4 items-center mt-4'>
+                        <View className='flex-row items-center mt-4 space-x-4'>
 
                             {/* <View className='flex-row'>
                                 {
@@ -195,7 +195,7 @@ const Issue = () => {
                     testID='comment-input'
                     placeholder='Add your own thoughts'
                     multiline={true}
-                    className='border border-gray-300 rounded-xl p-2 mt-2 flex-1'
+                    className='flex-1 p-2 mt-2 border border-gray-300 rounded-xl'
                     value={comment}
                     onChangeText={text => setComment(text)}
                 />
@@ -205,7 +205,7 @@ const Issue = () => {
             </KeyboardAvoidingView>
         </ScrollView>
 
-        <View className='my-3 flex-row justify-between'>
+        <View className='flex-row justify-between my-3'>
         <TouchableOpacity activeOpacity={0.9} className='p-2'>
             <AntDesign name="hearto" size={24} color="#2DABB1" />
         </TouchableOpacity>

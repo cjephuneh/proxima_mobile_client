@@ -6,8 +6,9 @@ import { login, signin } from '../redux/slice/auth/authSlice'
 import { Formik } from 'formik';
 import * as yup from 'yup'
 
+
 const Login = ({ navigation }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { isUserLoading, isUserError, isUserMessage } = useSelector((state) => state.auth)
 
@@ -26,6 +27,8 @@ const Login = ({ navigation }) => {
     dispatch(signin({email: values.email, password: values.password}))
   }
 
+  
+
   // display appropriate error messages
   useEffect(() => {
     if(isUserError){
@@ -38,12 +41,12 @@ const Login = ({ navigation }) => {
   }, [isUserError, isUserMessage, isUserLoading])
 
   return (
-    <SafeAreaView className='bg-white flex-1 px-4'>
-      <View className='pt-8 flex-row items-center'>
+    <SafeAreaView className='flex-1 px-4 bg-white'>
+      <View className='flex-row items-center pt-8'>
         <TouchableOpacity activeOpacity={0.2} onPress={() => navigation.navigate('onBoarding')} testID='back-button'>
         <Ionicons name="chevron-back" size={28} color="black" />
         </TouchableOpacity>
-        <View className=' -mx-6 w-full'>
+        <View className='w-full -mx-6 '>
         <Text className='text-xl text-center' testID='screen-title'>Log in</Text>
         </View>
       </View>
@@ -57,7 +60,7 @@ const Login = ({ navigation }) => {
           {
             ({ handleChange, handleBlur, handleSubmit, values, errors, isValid, touched}) => (
               <View>
-                <View className='border border-gray-300 p-2 rounded-xl'>
+                <View className='p-2 border border-gray-300 rounded-xl'>
                     <Text className=''>Email</Text>
                     <TextInput
                         name='email'
@@ -70,7 +73,7 @@ const Login = ({ navigation }) => {
 
                 {errors.email && touched.email && <Text className='mt-2 ml-2 text-sm text-red-600' testID='email-validation-text'>{errors.email}</Text>}
 
-                <View className='border border-gray-300 mt-4 p-2 rounded-xl'>
+                <View className='p-2 mt-4 border border-gray-300 rounded-xl'>
                     <TextInput
                         name='password'
                         placeholder='password'
@@ -89,7 +92,7 @@ const Login = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
 
-                <View className='mt-4 flex-row space-x-2'>
+                <View className='flex-row mt-4 space-x-2'>
                   <Text>No account?</Text>
                   <TouchableOpacity onPress={() => navigation.navigate('multistep')} testID='signup-button'>
                       <Text className='text-[#2DABB1]'>Sign up</Text>
@@ -108,7 +111,7 @@ const Login = ({ navigation }) => {
                       className='bg-[#2DABB1] mt-8 px-6 py-3 w-full rounded-full'
                       testID='login-button'
                     >
-                      <Text className='text-white text-center text-xl font-semibold'>{isUserLoading ? 'Please wait...' : 'Log in'}</Text>
+                      <Text className='text-xl font-semibold text-center text-white'>{isUserLoading ? 'Please wait...' : 'Log in'}</Text>
                     </TouchableOpacity>
                 </View>
               </View>

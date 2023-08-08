@@ -1,14 +1,15 @@
 import axios from "axios";
 import { ApiUrls } from "../../../utils/ApiUrls";
+import axiosInstance from "../../../utils/axiosInstance";
 
-const getCommunities = async (communityData) => {
+const getCommunities = async(communityData) => {
     // const response = await axios.post(ApiUrls.retrieve_communities, communityData)
 
     // return response.data
     try {
-        const { data } = await axios.post(ApiUrls.retrieve_communities, {
-            communityData
-        })
+        const { data } = await axiosInstance.get(ApiUrls.retrieve_communities, communityData)
+
+        // const { data } = await axiosInstance.get(`https://core.proximaai.co/api/community/community/?community_id=1`)
 
         return data
     } catch (error) {
@@ -16,9 +17,10 @@ const getCommunities = async (communityData) => {
     }
 }
 
-const getACommunity = async (communityData) => {
+const getACommunity = async(communityData) => {
+
     try {
-        const { data } = await axios.post(ApiUrls.retrieve_communities, communityData)
+        const { data } = await axiosInstance.get(ApiUrls.retrieve_communities, communityData);
 
         return data
     } catch (error) {
@@ -26,12 +28,12 @@ const getACommunity = async (communityData) => {
     }
 }
 
-const getCommunityIssues = async (communityData) => {
+const getCommunityIssues = async(communityData) => {
     // const response = await axios.post('/', communityData)
 
     // return response.data
     try {
-        const { data } = await axios.post(ApiUrls.retrieve_community_issues, {
+        const { data } = await axiosInstance.get(ApiUrls.retrieve_community_issues, {
             community_id: communityData
         })
 
@@ -41,11 +43,11 @@ const getCommunityIssues = async (communityData) => {
     }
 }
 
-const getIssueThread = async (issueData) => {
+const getIssueThread = async(issueData) => {
     // console.log('thread')
     // console.log(issueData)
     try {
-        const { data } = await axios.post(ApiUrls.retrieve_issue_thread, {
+        const { data } = await axiosInstance.get(ApiUrls.retrieve_issue_thread, {
             issue_id: issueData
         })
 
@@ -58,9 +60,9 @@ const getIssueThread = async (issueData) => {
     }
 }
 
-const getThreadComments = async (threadData) => {
+const getThreadComments = async(threadData) => {
     try {
-        const { data } = await axios.post(ApiUrls.retrieve_thread_comments, {
+        const { data } = await axiosInstance.get(ApiUrls.retrieve_thread_comments, {
             thread_id: threadData
         })
 
@@ -72,9 +74,9 @@ const getThreadComments = async (threadData) => {
     }
 }
 
-const raiseIssue = async (issueData) => {
+const raiseIssue = async(issueData) => {
     try {
-        const { data } = await axios.post(ApiUrls.raise_issue, issueData)
+        const { data } = await axiosInstance.post(ApiUrls.raise_issue, issueData)
 
         return data
     } catch (error) {
@@ -82,19 +84,19 @@ const raiseIssue = async (issueData) => {
     }
 }
 
-const commentOnIssue = async (commentData) => {
-    try{
-        const { data } = await axios.post(ApiUrls.retrieve_thread_comments, commentData)
+const commentOnIssue = async(commentData) => {
+    try {
+        const { data } = await axiosInstance.post(ApiUrls.retrieve_thread_comments, commentData)
 
         return data
-    } catch(error) {
+    } catch (error) {
         throw error
     }
 }
 
-const likeIssueComment = async (commentData) => {
+const likeIssueComment = async(commentData) => {
     try {
-        const { data } = await axios.post(ApiUrls.like_issue_comment, commentData)
+        const { data } = await axiosInstance.post(ApiUrls.like_issue_comment, commentData)
 
         // console.log('comments', data)
 
@@ -104,15 +106,18 @@ const likeIssueComment = async (commentData) => {
     }
 }
 
-const likeIssue = async (communityData) => {
-    const response = await axios.post('/', communityData)
+const likeIssue = async(communityData) => {
+    const response = await axiosInstance.post('/', communityData)
 
     return response.data
 }
 
-const retrieveCommunitySurveys = async (communityData) => {
+const retrieveCommunitySurveys = async(communityData) => {
+    // console.log('Retrieving Community', communityData)
     try {
-        const { data } = await axios.post(ApiUrls.retrieve_surveys, communityData)
+        const { data } = await axiosInstance.get(`https://core.proximaai.co/api/survey/survey/?tenant_id=${communityData.tenant_id}&community_id=${communityData.community_id}`)
+            // const { data } = await axiosInstance.get(`https://core.proximaai.co/api/survey/survey/?tenant_id=10&community_id=26`)
+            // 
 
         // console.log('surveys data', data)
 
@@ -122,9 +127,9 @@ const retrieveCommunitySurveys = async (communityData) => {
     }
 }
 
-const favoriteCommunities = async (communityData) => {
+const favoriteCommunities = async(communityData) => {
     try {
-        const { data } = await axios.post(ApiUrls.favorite_communities, communityData)
+        const { data } = await axiosInstance.post(ApiUrls.favorite_communities, communityData)
 
         return data
     } catch (error) {
@@ -132,9 +137,9 @@ const favoriteCommunities = async (communityData) => {
     }
 }
 
-const toggleFavoriteCommunities = async (communityData) => {
+const toggleFavoriteCommunities = async(communityData) => {
     try {
-        const { data } = await axios.post(ApiUrls.favorite_communities, communityData)
+        const { data } = await axiosInstance.post(ApiUrls.favorite_communities, communityData)
 
         return data
     } catch (error) {
@@ -142,12 +147,14 @@ const toggleFavoriteCommunities = async (communityData) => {
     }
 }
 
-const joinCommunity = async (communityData) => {
+const joinCommunity = async(communityData) => {
+    console.log("commdata", communityData);
+
     try {
-        const { data } = await axios.post(ApiUrls.join_community, communityData)
+        const { data } = await axiosInstance.post(`https://core.proximaai.co/community/joincommunity/?client_id=7&community_id=41`)
 
         // can't join community
-        if(data.message){
+        if (data.message) {
             return { error: data.message.error }
         }
 
@@ -157,26 +164,24 @@ const joinCommunity = async (communityData) => {
     }
 }
 
-const leaveCommunity = async (communityData) => {
+const leaveCommunity = async(communityData) => {
     try {
-        const { data } = await axios.post(ApiUrls.leave_community, communityData)
+        const { data } = await axiosInstance.post(ApiUrls.leave_community, communityData)
 
         // can't leave community
-        if(data.message){
+        if (data.message) {
             return { error: data.message.error }
-        }
-
-        else return data
+        } else return data
     } catch (error) {
         throw error
     }
 }
 
-const submitSurveyResponse = async (responseData) => {
+const submitSurveyResponse = async(responseData) => {
     try {
-        const { data } = await axios.post(ApiUrls.survey_response, responseData)
+        const { data } = await axiosInstance.post(ApiUrls.survey_response, responseData)
 
-        if(data.message){
+        if (data.message) {
             return { error: data.message.error }
         }
 
@@ -187,7 +192,21 @@ const submitSurveyResponse = async (responseData) => {
 }
 
 const communityService = {
-    getCommunities, getACommunity, getCommunityIssues, getIssueThread, getThreadComments, raiseIssue, commentOnIssue, likeIssueComment, likeIssue, retrieveCommunitySurveys, favoriteCommunities, toggleFavoriteCommunities, joinCommunity, leaveCommunity, submitSurveyResponse
+    getCommunities,
+    getACommunity,
+    getCommunityIssues,
+    getIssueThread,
+    getThreadComments,
+    raiseIssue,
+    commentOnIssue,
+    likeIssueComment,
+    likeIssue,
+    retrieveCommunitySurveys,
+    favoriteCommunities,
+    toggleFavoriteCommunities,
+    joinCommunity,
+    leaveCommunity,
+    submitSurveyResponse
 }
 
 export default communityService

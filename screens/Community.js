@@ -105,12 +105,12 @@ const Community = () => {
   return (
     <SafeAreaView className='flex-1 pt-8'>
       <View className='relative'>
-        {/* <Image source={require('../assets/companyBg.png')} resizeMode='cover' className='h-40 w-full' /> */}
-        <View className='justify-center items-center'>
+        {/* <Image source={require('../assets/companyBg.png')} resizeMode='cover' className='w-full h-40' /> */}
+        <View className='items-center justify-center'>
         </View>
       </View>
 
-      <View className='mt-4 px-3 flex-1 justify-between mb-2'>
+      <View className='justify-between flex-1 px-3 mt-4 mb-2'>
         {
           !community ? 
           
@@ -120,20 +120,20 @@ const Community = () => {
             <>
               <View>
                 <View className='space-y-1'>
-                  <Text className='text-2xl text-center font-bold'>{community[0].tenant_id.tenant_name}</Text>
-                  <Text className='text-gray-500 text-center'>{community[0].description}</Text>
+                  <Text className='text-2xl font-bold text-center'>{community[0].tenant_id.tenant_name}</Text>
+                  <Text className='text-center text-gray-500'>{community[0].description}</Text>
                 </View>
 
-                <View className='flex-row space-x-4 items-center mt-4 mx-auto'>
+                <View className='flex-row items-center mx-auto mt-4 space-x-4'>
                     <View className='flex-row'>
                         <MaterialCommunityIcons name="account-group" size={24} color="black" />   
                     </View>
 
-                    <TouchableOpacity className='flex-row space-x-2'>
+                    {/* <TouchableOpacity className='flex-row space-x-2'>
                         <Text className='font-semibold text-[#2DABB1]'>{community[0].members.length} members</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
-                {/* <View className='mt-4 flex-row justify-around'>
+                {/* <View className='flex-row justify-around mt-4'>
                   <View className='items-center'>
                     <Text className='font-semibold'>Community Rating</Text>
                     <Text>4.65</Text>
@@ -150,7 +150,7 @@ const Community = () => {
                 
                 {
                   user && community[0].members.some(member => member.email === user.email) &&
-                  <TouchableOpacity activeOpacity={0.9} disabled={isLeaveCommunityLoading} onPress={() => handleLeaveCommunity(user.id)} className='mt-3 items-center border border-red-500 rounded-full w-48 mx-auto py-2'>
+                  <TouchableOpacity activeOpacity={0.9} disabled={isLeaveCommunityLoading} onPress={() => handleLeaveCommunity(user.id)} className='items-center w-48 py-2 mx-auto mt-3 border border-red-500 rounded-full'>
                     <Text className='font-semibold text-red-500'>Leave Community</Text>
                   </TouchableOpacity>
                 }
@@ -164,16 +164,16 @@ const Community = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('issues', { community_id })}
                 >
-                  <Text className='text-white font-semibold text-center'>View Community Issues</Text>
+                  <Text className='font-semibold text-center text-white'>View Community Issues</Text>
                 </TouchableOpacity> :
 
                 <TouchableOpacity 
                   className='bg-[#2DABB1] px-6 py-2 rounded-full'
                   activeOpacity={0.8}
                   disabled={isJoinCommunityLoading}
-                  onPress={() => handleJoinCommunity(user.id)}
+                  onPress={() => handleJoinCommunity(user?.id)}
                   >
-                  <Text className='text-white font-semibold text-center'>Join Community</Text>
+                  <Text className='font-semibold text-center text-white'>Join Community</Text>
                 </TouchableOpacity>
               }
             </>

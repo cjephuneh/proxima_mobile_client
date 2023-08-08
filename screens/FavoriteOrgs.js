@@ -17,9 +17,16 @@ const FavoriteOrgs = () => {
     const [availableCommunities, setCommunities] = useState([])
     const [searchWord, setSearchWord] = useState('')
 
-    const filteredOrgs = availableCommunities?.filter(item =>
-        item.tenant_id.tenant_name.toLowerCase().includes(searchWord.toLowerCase())
+    // const filteredOrgs = availableCommunities?.filter(item =>
+    //     item.tenant_id.tenant_name.toLowerCase().includes(searchWord.toLowerCase())
+    //   )
+   
+    const filteredOrgs = Array.isArray(availableCommunities)
+    ? availableCommunities.filter(item =>
+        item?.tenant_id?.tenant_name?.toLowerCase().includes(searchWord.toLowerCase())
       )
+    : [];
+   
 
     useEffect(() => {
         // fetch Communities
@@ -35,10 +42,10 @@ const FavoriteOrgs = () => {
         }
     }, [isFavoriteCommunitiesSuccess, favoritecommunities])
   return (
-    <SafeAreaView className='flex-1 bg-white pt-8 px-3'>
+    <SafeAreaView className='flex-1 px-3 pt-8 bg-white'>
         
     <View className='flex-row items-center space-x-3'>
-        <View className='flex-row bg-gray-200 rounded-lg px-2 space-x-3 py-2 items-center flex-1'>
+        <View className='flex-row items-center flex-1 px-2 py-2 space-x-3 bg-gray-200 rounded-lg'>
             <EvilIcons name="search" size={24} color="black" />
             <TextInput
                 className='flex-1'
@@ -57,7 +64,7 @@ const FavoriteOrgs = () => {
         </TouchableOpacity>
     </View>
       
-      <Text className='text-2xl font-bold mt-2'>Favorite Communities</Text>
+      <Text className='mt-2 text-2xl font-bold'>Favorite Communities</Text>
       <Text>Explore your favorite communities</Text>
 
       <ScrollView className='mt-4 space-y-3'>
@@ -70,12 +77,12 @@ const FavoriteOrgs = () => {
                             community_id: community.community_id
                         })}>
                             <View
-                                className='flex-row space-x-3 items-center'
+                                className='flex-row items-center space-x-3'
                             >
                                 <MaterialIcons name="groups" size={24} color="#2DABB1" />
                                 <View>
                                     <Text>{community.tenant_id.tenant_name}</Text>
-                                    <Text className='text-gray-500 text-sm'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
+                                    <Text className='text-sm text-gray-500'>{community.description.length > 40 ? `${community.description.slice(0, 40)}...` : community.description}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>

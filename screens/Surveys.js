@@ -18,13 +18,13 @@ export default function Surveys(){
 
     // retrieve community surveys
     useEffect(() => {
-        community_id && dispatch(retrieveCommunitySurveys({ tenant_id: tenant_id}))
+        community_id && dispatch(retrieveCommunitySurveys({community_id: community_id, tenant_id: tenant_id}))
     }, [community_id, tenant_id, dispatch])
     return (
         community_id &&
-        <SafeAreaView className='flex-1 pt-8 px-3'>
+        <SafeAreaView className='flex-1 px-3 pt-8'>
             <View className='flex-row items-center space-x-3'>
-                <View className='flex-row bg-gray-200 rounded-lg px-2 space-x-3 py-2 items-center flex-1'>
+                <View className='flex-row items-center flex-1 px-2 py-2 space-x-3 bg-gray-200 rounded-lg'>
                     <EvilIcons name="search" size={24} color="black" />
                     <TextInput
                         className='flex-1'
@@ -64,13 +64,13 @@ export default function Surveys(){
                                             tenant_id
                                         })} 
                                         activeOpacity={0.9} 
-                                        className='bg-white flex-row items-center space-x-3 mb-1 p-2 rounded'
+                                        className='flex-row items-center p-2 mb-1 space-x-3 bg-white rounded'
                                         style={{elevation: 2, shadowColor: '#52006A'}}
                                     >
                                             <Ionicons name="md-newspaper-outline" size={24} color="#2DABB1" />
                                             <View>
                                                 <Text className='font-semibold'>{survey.survey_topic}</Text>
-                                                <Text className='text-gray-500 text-sm'>{survey.survey_description.length > 40 ? survey.survey_description.slice(0, 40)+'...' : survey.survey_description}</Text>
+                                                <Text className='text-sm text-gray-500'>{survey.survey_description.length > 40 ? survey.survey_description.slice(0, 40)+'...' : survey.survey_description}</Text>
                                             </View>
                                     </TouchableOpacity>
                                 ))

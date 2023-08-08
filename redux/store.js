@@ -11,5 +11,19 @@ export const store = configureStore({
     },
 })
 
-// retrieve the user info from local storage
-store.dispatch(initializeUser());
+const waitForLocalStorage = () =>
+    new Promise((resolve) => {
+        const checkLocalStorage = () => {
+            if (typeof localStorage !== 'undefined') {
+                resolve();
+            } else {
+                setTimeout(checkLocalStorage, 100);
+            }
+        };
+        checkLocalStorage();
+    });
+
+// Dispatch the initializeUser action after creating the store and localStorage is available
+waitForLocalStorage().then(() => {
+    store.dispatch(initializeUser());
+});

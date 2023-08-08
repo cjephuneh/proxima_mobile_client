@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import DrawerNav from './DrawerNav';
 import Login from '../screens/Login';
 import Multistep from '../screens/Multistep';
+import OnBoarding from '../screens/OnBoarding';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ const MainStackNav = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {!user ? (
         <>
+          <Stack.Screen name='onBoarding' component={OnBoarding} />
           <Stack.Screen name='login' component={Login} />
           <Stack.Screen name='multistep' component={Multistep} />
           {/* <Stack.Screen name='drawer' component={DrawerNav} /> */}

@@ -33,7 +33,7 @@ const Home = () => {
   return (
     <SafeAreaView className='flex-1 bg-[#2DABB1]'>      
         <View className='flex-row justify-between items-center bg-[#2DABB1] pt-8 px-3 pb-1'>
-            <Text className='text-2xl font-bold mt-2 text-white'>Proxima</Text>
+            <Text className='mt-2 text-2xl font-bold text-white'>Proxima</Text>
 
             <TouchableOpacity
                     activeOpacity={0.9}
@@ -45,8 +45,8 @@ const Home = () => {
             </TouchableOpacity>
         </View>
 
-        <View className='bg-gray-50 flex-1'>
-            <View className="my-6 mx-3 flex-row justify-between">
+        <View className='flex-1 bg-gray-50'>
+            <View className="flex-row justify-between mx-3 my-6">
                 <TouchableOpacity
                 activeOpacity={0.9} 
                 className='items-center justify-center'
@@ -67,6 +67,7 @@ const Home = () => {
                     </View>
                     <Text className='font-semibold'>Communities</Text>
                 </TouchableOpacity>
+                
                 <TouchableOpacity
                 activeOpacity={0.9} 
                 className='items-center justify-center'
@@ -79,8 +80,8 @@ const Home = () => {
                 </TouchableOpacity>
             </View>
 
-            <View className='mt-4 flex-1 justify-between'>
-                    <Text className='mx-3 font-semibold text-lg text-gray-600'>Recent Chats</Text>
+            <View className='justify-between flex-1 mt-4'>
+                    <Text className='mx-3 text-lg font-semibold text-gray-600'>Recent Chats</Text>
                     <ScrollView className='mt-3'>
                                 {
                                     isChatsLoading ? <Text className='mx-3'>Recent chats loading...</Text> :
@@ -91,7 +92,7 @@ const Home = () => {
                                         <TouchableOpacity
                                             onPress={() => navigation.navigate('chat', { chat_id: chat.chat_id })} 
                                             key={chat.chat_id}
-                                            className='flex-row space-x-2 items-center rounded px-3 mx-3 py-3 bg-white mb-1'
+                                            className='flex-row items-center px-3 py-3 mx-3 mb-1 space-x-2 bg-white rounded'
                                             testID='open-chat'
                                             style={{elevation: 2, shadowColor: '#52006A'}}
                                         >
@@ -106,7 +107,7 @@ const Home = () => {
                                 }
                     </ScrollView>
                 <TouchableOpacity activeOpacity={0.9} className='mx-3 mb-12 rounded-full bg-[#2DABB1] px-4 py-3' onPress={() => navigation.navigate('createIssue')}>
-                    <Text className='text-center font-semibold text-white'>Add an Instant Issue</Text>
+                    <Text className='font-semibold text-center text-white'>Add an Instant Issue</Text>
                 </TouchableOpacity>
             </View>
         </View>

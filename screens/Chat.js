@@ -80,11 +80,12 @@ const Chat = () => {
       console.log(formData._parts);
       
       
-      fetch('http://192.168.1.18:3000/api/chat/voice', {
-        method: 'POST',
+      fetch('https://app.proximaai.co/api/chat/voice', {
+        method: 'post',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'multipart/form-data; boundary=---------------------------1234567890123456789012345678',
+          "Authorization": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImV4cCI6MTY5NjE0NjM4OX0.b6l8MnB6hfY5p-ibr3z35h-iovjiJNmwrK1ImjSfrXE"
         },
         body: formData,
       })
@@ -290,7 +291,7 @@ const Chat = () => {
     }, [scrollViewRef])
 
   return (
-    <SafeAreaView className='flex-1 bg-white pt-8 px-3 relative'>
+    <SafeAreaView className='relative flex-1 px-3 pt-8 bg-white'>
       <View className='flex-row items-center justify-between'>
         <TouchableOpacity testID='close-button' onPress={() => navigation.navigate('inbox')}>
         <AntDesign name="close" size={24} color="black" />
@@ -302,7 +303,7 @@ const Chat = () => {
         <ScrollView 
             ref={scrollViewRef}
             onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
-            className='mt-3 space-y-2 relative mb-2 flex-1'
+            className='relative flex-1 mt-3 mb-2 space-y-2'
             showsVerticalScrollIndicator={false}
         >
 
@@ -310,7 +311,7 @@ const Chat = () => {
               isChatMessagesLoading ? <Text>Loading messages...</Text> :
               
               (
-                isChatMessagesSuccess && chatMessages &&
+                isChatMessagesSuccess && Array.isArray(chatMessages) &&
 
                 // sort the messages
                 [...chatMessages].sort((a, b) => a.message_id - b.message_id).map((message, index) => (
@@ -325,8 +326,8 @@ const Chat = () => {
         
         </ScrollView>
         { !recording ?
-          <View className='my-4 flex-row items-end'>
-            <View className='flex-row flex-1 items-center border border-gray-300 px-4 py-2 rounded-md'>
+          <View className='flex-row items-end my-4'>
+            <View className='flex-row items-center flex-1 px-4 py-2 border border-gray-300 rounded-md'>
               <TextInput
                       placeholder='Type your message'
                       className='flex-1'
@@ -347,18 +348,18 @@ const Chat = () => {
                   <FontAwesome name="send" size={24} color="#2DABB1" />
             </TouchableOpacity>
           </View> :
-          <View className='p-2 rounded border border-gray-100'>
+          <View className='p-2 border border-gray-100 rounded'>
                 {
                   recordingPaused ? (
                     <View className='flex-row items-center'>
-                      <Text className='text-sm text-red-500 text-center'>
+                      <Text className='text-sm text-center text-red-500'>
                         {`${String(Math.floor(recordingDuration / 60)).padStart(2, '0')}:${String(recordingDuration % 60).padStart(2, '0')}`}  
                       </Text>
                       <Text className='text-sm text-[#2DABB1] text-center flex-1 -ml-8'>Paused</Text>
                     </View>
                   ) : (
                     <View className='flex-row items-center '>
-                      <Text className='text-sm text-red-500 text-center'>
+                      <Text className='text-sm text-center text-red-500'>
                       {`${String(Math.floor(recordingDuration / 60)).padStart(2, '0')}:${String(recordingDuration % 60).padStart(2, '0')}`}  
                       </Text>
                       <Text className='text-sm text-[#2DABB1] text-center flex-1 -ml-8 animate-pulse'>Recording...</Text>
@@ -366,7 +367,7 @@ const Chat = () => {
                   )
                 }
 
-                <View className='my-4 flex-row justify-between'>
+                <View className='flex-row justify-between my-4'>
                   <TouchableOpacity onPress={() => cancelRecording()} activeOpacity={0.9} className='px-2 py-1 mb-2'>
                       <MaterialCommunityIcons name="delete" size={24} color="red" />
                   </TouchableOpacity>            

@@ -26,9 +26,11 @@ const CreateIssue = () => {
     const [issueTitle, setIssueTitle] = useState(null)
     const [issueDescription, setIssueDescription] = useState(null)
     
-    const filteredOrgs = communities && communities.filter(org =>
+    const filteredOrgs = Array.isArray(communities) && communities.filter(org =>
       org.tenant_id.tenant_name.toLowerCase().includes(searchText.toLowerCase())
-    );
+    ) || [];
+   
+    
     
     const createIssue = () => {
       if(!selectedOrg || !issueTitle.trim().length === 0 || issueDescription.trim().length === 0){
@@ -73,15 +75,15 @@ const CreateIssue = () => {
       }
     }, [isRaiseIssueSuccess, isRaiseIssueError])
   return (
-    <SafeAreaView className='pt-8 px-3'>
+    <SafeAreaView className='px-3 pt-8'>
       <Text className='text-2xl font-bold text-center'>Create an issue</Text>
 
-      <View className='mt-3 flex-row space-x-3 items-center'>
+      <View className='flex-row items-center mt-3 space-x-3'>
         {/* <Image source={require('../assets/user.png')} /> */}
         <View className='h-9 w-9 rounded-full items-center justify-center bg-[#2DABB1]'>
         <FontAwesome name="user" size={24} color="white" />
         </View>
-        <Text className='font-semibold text-lg'>{user.first_name} {user.last_name}</Text>
+        <Text className='text-lg font-semibold'>{user.first_name} {user.last_name}</Text>
       </View>
 
       {
@@ -91,7 +93,7 @@ const CreateIssue = () => {
           isCommunitiesSuccess && communities && 
 
           <KeyboardAvoidingView className='space-y-3' behavior='height'>
-            <View className='flex-row items-center mt-3 space-x-3 bg-gray-200 px-2 py-1 rounded'>
+            <View className='flex-row items-center px-2 py-1 mt-3 space-x-3 bg-gray-200 rounded'>
                 <EvilIcons name="search" size={24} color="black" />
                 <TextInput
                     className='flex-1'
@@ -107,7 +109,7 @@ const CreateIssue = () => {
                   <TouchableOpacity key={org.community_id} onPress={() => {
                       setSelectedOrg(org)
                       setSearchText(org.tenant_id.tenant_name)
-                    }} activeOpacity={0.9} className='px-2 py-1 bg-gray-200 mx-1 rounded'>
+                    }} activeOpacity={0.9} className='px-2 py-1 mx-1 bg-gray-200 rounded'>
                       <Text>{org.tenant_id.tenant_name}</Text>
                   </TouchableOpacity>
                 ))
@@ -117,12 +119,12 @@ const CreateIssue = () => {
               selectedOrg ?
               <TouchableOpacity activeOpacity={0.9} onPress={() => setSelectedOrg(null)} className='relative bg-[#2DABB1] px-4 py-2 font-semibold text-white self-start rounded'>
                 <Text className='font-semibold text-white'>{selectedOrg?.tenant_id.tenant_name}</Text>
-                <TouchableOpacity className='absolute right-0 top-0' activeOpacity={0.9} onPress={() => setSelectedOrg(null)}>
+                <TouchableOpacity className='absolute top-0 right-0' activeOpacity={0.9} onPress={() => setSelectedOrg(null)}>
                   <Entypo name="cross" size={18} color="red" />
                 </TouchableOpacity>
               </TouchableOpacity> :
 
-              <View className='flex-row items-center gap-2 bg-blue-200 pr-2 pb-2 rounded w-fit self-start ml-1'>
+              <View className='flex-row items-center self-start gap-2 pb-2 pr-2 ml-1 bg-blue-200 rounded w-fit'>
                 <Octicons name="info" size={16} color="black" />
                 <Text className=''>Please select a community</Text>
               </View>
@@ -130,7 +132,7 @@ const CreateIssue = () => {
 
 
             <TextInput
-                className='bg-gray-200 px-4 py-2 rounded'
+                className='px-4 py-2 bg-gray-200 rounded'
                 placeholder={selectedOrg === null ? 'Please select a community' : 'Add a title for your issue'}
                 value={issueTitle}
                 onChangeText={text => setIssueTitle(text)}
@@ -140,7 +142,7 @@ const CreateIssue = () => {
             <TextInput
                 multiline={true}
                 numberOfLines={3}
-                className='bg-gray-200 px-4 py-2 rounded'
+                className='px-4 py-2 bg-gray-200 rounded'
                 placeholder={selectedOrg === null ? 'Please select a community' : 'Add a description for your issue'}
                 style={{
                   maxHeight: 90,
@@ -153,7 +155,7 @@ const CreateIssue = () => {
             />            
 
             <TouchableOpacity activeOpacity={0.9} disabled={isRaiseIssueLoading} onPress={() => createIssue()} className='flex-row space-x-2 items-center bg-[#2DABB1] self-start px-4 py-2 rounded-full mt-2'>
-                <Text className='text-white font-semibold'>{isRaiseIssueLoading ? 'Please wait...' : 'Raise Issue'}</Text>
+                <Text className='font-semibold text-white'>{isRaiseIssueLoading ? 'Please wait...' : 'Raise Issue'}</Text>
                 <Ionicons name="send" size={16} color="white" />
             </TouchableOpacity>
           </KeyboardAvoidingView>

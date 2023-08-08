@@ -33,17 +33,17 @@ const initialState = {
 }
 
 // retrieveChats
-export const retrieveChats = createAsyncThunk('chat/retrieveChats', async (chatData, thunkAPI) => {
+export const retrieveChats = createAsyncThunk('chat/retrieveChats', async(chatData, thunkAPI) => {
     try {
         const response = await chatService.retrieveChats(chatData)
 
-        if(response.error){
+        if (response.error) {
             thunkAPI.rejectWithValue(response.error)
             return
         }
 
         return response
-    } catch(error) {
+    } catch (error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -51,17 +51,17 @@ export const retrieveChats = createAsyncThunk('chat/retrieveChats', async (chatD
 })
 
 // create chat
-export const createChat = createAsyncThunk('chat/createChat', async (chatData, thunkAPI) => {
+export const createChat = createAsyncThunk('chat/createChat', async(chatData, thunkAPI) => {
     try {
         const response = await chatService.createChat(chatData)
 
-        if(response.error){
+        if (response.error) {
             thunkAPI.rejectWithValue(response.error)
             return
         }
 
         return response
-    } catch(error) {
+    } catch (error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -69,10 +69,10 @@ export const createChat = createAsyncThunk('chat/createChat', async (chatData, t
 })
 
 // retrieve messages
-export const retrieveMessages = createAsyncThunk('chat/retrieveMessages', async (messagesData, thunkAPI) => {
+export const retrieveMessages = createAsyncThunk('chat/retrieveMessages', async(messagesData, thunkAPI) => {
     try {
         return await chatService.retrieveMessages(messagesData)
-    } catch(error) {
+    } catch (error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -80,10 +80,10 @@ export const retrieveMessages = createAsyncThunk('chat/retrieveMessages', async 
 })
 
 // send a message
-export const sendMessage = createAsyncThunk('chat/sendMessage', async (messageData, thunkAPI) => {
+export const sendMessage = createAsyncThunk('chat/sendMessage', async(messageData, thunkAPI) => {
     try {
         return await chatService.sendMessage(messageData)
-    } catch(error) {
+    } catch (error) {
         console.error(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -116,10 +116,10 @@ const chatSlice = createSlice({
                 state.isChatsLoading = false
                 state.isChatsError = true
                 state.isChatsMessage = action.payload
-                state.chats = null 
+                state.chats = null
             })
 
-            .addCase(createChat.pending, (state) => {
+        .addCase(createChat.pending, (state) => {
                 state.isChatLoading = true
             })
             .addCase(createChat.fulfilled, (state, action) => {
@@ -131,10 +131,10 @@ const chatSlice = createSlice({
                 state.isChatLoading = false
                 state.isChatError = true
                 state.isChatMessage = action.payload
-                state.chat = null 
+                state.chat = null
             })
 
-            .addCase(retrieveMessages.pending, (state) => {
+        .addCase(retrieveMessages.pending, (state) => {
                 state.isChatMessagesLoading = true
             })
             .addCase(retrieveMessages.fulfilled, (state, action) => {
@@ -146,10 +146,10 @@ const chatSlice = createSlice({
                 state.isChatMessagesLoading = false
                 state.isChatMessagesError = true
                 state.isChatMessagesMessage = action.payload
-                state.chatMessages = null 
+                state.chatMessages = null
             })
 
-            .addCase(sendMessage.pending, (state) => {
+        .addCase(sendMessage.pending, (state) => {
                 state.isChatMessageLoading = true
             })
             .addCase(sendMessage.fulfilled, (state, action) => {
@@ -161,7 +161,7 @@ const chatSlice = createSlice({
                 state.isChatMessageLoading = false
                 state.isChatMessageError = true
                 state.isChatMessageMessage = action.payload
-                state.chatMessage = null 
+                state.chatMessage = null
             })
     }
 })
