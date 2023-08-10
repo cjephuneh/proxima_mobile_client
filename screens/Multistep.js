@@ -485,12 +485,12 @@ export const SetProfile = () => {
         lastName: yup
             .string()
             .required('Required'),
-        gender: yup
-            .string()
-            .required(),
-        dateOfBirth: yup
-            .string()
-            .required('Required'),
+        // gender: yup
+        //     .string()
+        //     .required(),
+        // dateOfBirth: yup
+        //     .string()
+        //     .required('Required'),
         phoneNumber: yup
             .string()
             .required('Required'),

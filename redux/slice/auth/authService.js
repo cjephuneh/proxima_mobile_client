@@ -35,7 +35,8 @@ const signinUser = async(userData) => {
 
 const registerUser = async(userData) => {
     try {
-        const { data } = await axiosInstance.post(ApiUrls.REGISTER_ENDPOINT, userData);
+        // const { data } = await axiosInstance.post(ApiUrls.REGISTER_ENDPOINT, userData);
+        const { data } = await axiosInstance.post(`https://core.proximaai.co/api/auth/client`)
 
         if (data.token) {
             const storeUserInfo = async() => {

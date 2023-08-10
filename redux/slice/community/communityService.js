@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '../../../utils/axiosInstance';
 import { ApiUrls } from "../../../utils/ApiUrls";
 import axiosInstance from "../../../utils/axiosInstance";
 
@@ -21,6 +21,9 @@ const getACommunity = async(communityData) => {
 
     try {
         const { data } = await axiosInstance.get(ApiUrls.retrieve_communities, communityData);
+
+        // const { data } = await axiosInstance.get(`https://core.proximaai.co/api/community/community/?community_id=10`)
+
 
         return data
     } catch (error) {
@@ -151,7 +154,9 @@ const joinCommunity = async(communityData) => {
     console.log("commdata", communityData);
 
     try {
-        const { data } = await axiosInstance.post(`https://core.proximaai.co/community/joincommunity/?client_id=7&community_id=41`)
+        // const { data } = await axiosInstance.post(`https://core.proximaai.co/api/community/joincommunity/?client_id=7&community_id=10`);
+
+        const { data } = await axiosInstance.post(ApiUrls.join_community, communityData)
 
         // can't join community
         if (data.message) {
