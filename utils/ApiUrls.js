@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 // const BASE_URI = 'http://192.168.1.18:3000/api'
 const BASE_URI = 'https://core.proximaai.co/api/'
     // const BASE_URI = 'https://app.proximaai.co/api'
 
+=======
+const BASE_URI = 'https://app.proximaai.co/api'
+>>>>>>> 352b433 (updates)
 
 // auth
 const REGISTER_ENDPOINT = BASE_URI + '/auth/client/'
