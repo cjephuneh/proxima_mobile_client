@@ -18,14 +18,8 @@ export default function Surveys(){
 
     // retrieve community surveys
     useEffect(() => {
-<<<<<<< HEAD
         community_id && dispatch(retrieveCommunitySurveys({community_id: community_id, tenant_id: tenant_id}))
     }, [community_id, tenant_id, dispatch])
-=======
-        community_id && dispatch(retrieveCommunitySurveys({ tenant_id: community_id}))
-    }, [community_id, dispatch])
-    
->>>>>>> 352b433 (updates)
     return (
         community_id &&
         <SafeAreaView className='flex-1 px-3 pt-8'>
